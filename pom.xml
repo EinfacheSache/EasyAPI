@@ -10,7 +10,7 @@
 
     <name>EasyAPI</name>
     <url>https://github.com/CubeAttack/EasyAPI/</url>
-    <description>A very lightweight and easy-to-use api</description>
+    <description>A lightweight and easy-to-use api</description>
 
     <properties>
         <java.source>17</java.source>
