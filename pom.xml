@@ -37,7 +37,7 @@
     </build>
 
     <dependencies>
-        <!--Needed for Logging -->
+        <!-- Needed for Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -49,7 +49,7 @@
             <version>2.0.7</version>
         </dependency>
 
-        <!--Needed for Files -->
+        <!-- Needed for Files -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -61,7 +61,7 @@
             <version>1.3.2</version>
         </dependency>
 
-        <!--Needed for Building -->
+        <!-- Needed for Building -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
