@@ -47,7 +47,7 @@ public class ConsoleListener
                     }
                 }
             } catch (Exception ex) {
-                logger.error("Error whiles reading Command : " + ex.getLocalizedMessage());
+                logger.error("Error whiles reading command : " + ex.getLocalizedMessage());
             }
         }).start();
     }
