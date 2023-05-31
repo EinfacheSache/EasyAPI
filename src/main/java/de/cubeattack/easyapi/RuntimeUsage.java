@@ -23,13 +23,13 @@ public class RuntimeUsage {
     }
 
     public static long getMaxRam(){
-        return Runtime.getRuntime().maxMemory() / (long)(1024 * 1024);
+        return Runtime.getRuntime().maxMemory() / (1024 * 1024);
     }
 
     public static long getFreeRam(){
-        return (long) (Runtime.getRuntime().maxMemory() / Math.pow(10,6)) - getUsedRam();
+        return (Runtime.getRuntime().maxMemory() / (1024 * 1024)) - getUsedRam();
     }
     public static long getUsedRam(){
-        return (long) ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / Math.pow(10,6));
+        return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
     }
 }
