@@ -23,7 +23,7 @@ public class RuntimeUsage {
     }
 
     public static long getMaxRam(){
-        return (long) (Runtime.getRuntime().maxMemory() / Math.pow(10,6));
+        return Runtime.getRuntime().maxMemory() / (long)(1024 * 1024);
     }
 
     public static long getFreeRam(){
