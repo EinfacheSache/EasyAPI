@@ -40,7 +40,7 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern> org.yaml.snakeyaml</pattern>
+                                    <pattern>org.yaml</pattern>
                                     <shadedPattern>de.cubeattack.libs</shadedPattern>
                                 </relocation>
                             </relocations>
