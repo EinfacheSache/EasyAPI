@@ -1,4 +1,4 @@
-package de.cubeattack.easyapi.logger;
+package de.cubeattack.api.logger;
 
 import ch.qos.logback.classic.Level;
 import org.slf4j.Logger;

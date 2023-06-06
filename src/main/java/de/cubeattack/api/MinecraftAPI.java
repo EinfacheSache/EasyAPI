@@ -1,6 +1,6 @@
-package de.cubeattack.easyapi;
+package de.cubeattack.api;
 
-import de.cubeattack.easyapi.logger.LogManager;
+import de.cubeattack.api.logger.LogManager;
 import org.json.JSONObject;
 
 import java.net.URL;

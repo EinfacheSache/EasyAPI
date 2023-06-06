@@ -1,6 +1,6 @@
-package de.cubeattack.easyapi.commands;
+package de.cubeattack.api.commands;
 
-import de.cubeattack.easyapi.logger.LogManager;
+import de.cubeattack.api.logger.LogManager;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;

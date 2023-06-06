@@ -1,4 +1,4 @@
-package de.cubeattack.easyapi.commands;
+package de.cubeattack.api.commands;
 
 import java.util.Arrays;
 

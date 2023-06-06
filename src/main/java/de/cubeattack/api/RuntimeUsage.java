@@ -1,4 +1,4 @@
-package de.cubeattack.easyapi;
+package de.cubeattack.api;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;

@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.cubeattack</groupId>
-    <artifactId>easyapi</artifactId>
+    <artifactId>api</artifactId>
     <version>1.0</version>
    <packaging>jar</packaging>
 
-    <name>EasyAPI</name>
+    <name>api</name>
     <url>https://github.com/CubeAttack/EasyAPI/</url>
     <description>A lightweight and easy-to-use api</description>
 

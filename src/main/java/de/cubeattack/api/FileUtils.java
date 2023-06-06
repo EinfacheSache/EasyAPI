@@ -1,6 +1,6 @@
-package de.cubeattack.easyapi;
+package de.cubeattack.api;
 
-import de.cubeattack.easyapi.logger.LogManager;
+import de.cubeattack.api.logger.LogManager;
 import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;
 import org.bspfsystems.yamlconfiguration.configuration.InvalidConfigurationException;
 import org.bspfsystems.yamlconfiguration.file.YamlConfiguration;

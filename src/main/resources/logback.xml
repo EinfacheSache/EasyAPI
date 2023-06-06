@@ -4,7 +4,7 @@
 
     <!-- Configure logger -->
     <logger name="de.cubeattack" level="TRACE"/>
-    <conversionRule conversionWord="logColor" converterClass="de.cubeattack.easyapi.logger.HighlightingCompositeConverter"/>
+    <conversionRule conversionWord="logColor" converterClass="de.cubeattack.api.logger.HighlightingCompositeConverter"/>
 
     <!-- Appender Configuration [Console] -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
