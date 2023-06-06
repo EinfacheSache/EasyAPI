@@ -13,7 +13,7 @@
             <onMatch>DENY</onMatch>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %logColor([%level] %class - %msg)</pattern>
+            <pattern>[%class] %msg)</pattern>
         </encoder>
     </appender>
 
@@ -23,7 +23,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %logColor([%level] %class::%method - %msg)</pattern>
+            <pattern>[%class::%method] %msg)</pattern>
         </encoder>
     </appender>
 

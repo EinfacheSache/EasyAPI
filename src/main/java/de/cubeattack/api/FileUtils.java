@@ -26,7 +26,7 @@ public class FileUtils
         this.configuration = new YamlConfiguration();
         this.file = new File (path +  "/" + fileName);
         copyToFile();
-        LogManager.getLogger().info("Loaded  " + fileName + " successful");
+        LogManager.getLogger().info("Loaded " + fileName + " successful");
     }
 
     private void copyToFile() {
