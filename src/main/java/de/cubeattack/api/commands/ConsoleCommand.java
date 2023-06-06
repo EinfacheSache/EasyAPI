@@ -13,7 +13,7 @@ class ConsoleCommand
     }
 
     public boolean equalsCommand(String cmd) {
-        return Arrays.stream(commands).anyMatch(t -> t.equalsIgnoreCase(cmd));
+        return Arrays.stream(commands).anyMatch((t) -> t.equalsIgnoreCase(cmd));
     }
 
     public void run(String[] args){
