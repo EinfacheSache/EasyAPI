@@ -44,10 +44,6 @@
                                     <pattern>org.yaml</pattern>
                                     <shadedPattern>de.cubeattack.libs</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>ch.qos</pattern>
-                                    <shadedPattern>de.cubeattack.libs</shadedPattern>
-                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
