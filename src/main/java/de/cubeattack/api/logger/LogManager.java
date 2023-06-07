@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("unused")
 public class LogManager
 {
-    public static void main(String[] args) {
-        getLogger().info("Test");
-    }
 
     static {
         String version = System.getProperty("java.version");
