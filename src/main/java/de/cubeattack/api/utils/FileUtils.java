@@ -20,20 +20,23 @@ public class FileUtils
     private final String fileName;
     private final File file;
 
-    public FileUtils(InputStream inputStream, String path, String fileName) {
+    public FileUtils(InputStream inputStream, String path, String fileName, boolean skipLoading) {
         this.fileName = fileName;
         this.inputStream = inputStream;
         this.configuration = new YamlConfiguration();
         this.file = new File (path +  "/" + fileName);
-        copyToFile();
+        copyToFile(skipLoading);
         LogManager.getLogger().info("Loaded " + fileName + " successful");
     }
 
-    private void copyToFile() {
+    private void copyToFile(boolean skipLoading) {
         try {
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 Files.copy(inputStream, file.toPath());
+
+                if(skipLoading)return;
+
                 configuration.load(file);
                 configuration.save(file);
             }
