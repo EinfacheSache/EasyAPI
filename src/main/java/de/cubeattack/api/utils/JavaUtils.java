@@ -1,6 +1,6 @@
-package de.cubeattack.api;
+package de.cubeattack.api.utils;
 
-public class Utils {
+public class JavaUtils {
 
     public static int javaVersionCheck(){
         String version = System.getProperty("java.version");

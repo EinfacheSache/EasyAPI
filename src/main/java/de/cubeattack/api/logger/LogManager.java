@@ -1,7 +1,7 @@
 package de.cubeattack.api.logger;
 
 import ch.qos.logback.classic.Level;
-import de.cubeattack.api.Utils;
+import de.cubeattack.api.utils.JavaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ public class LogManager
 {
 
     static {
-        if(Utils.javaVersionCheck() < 11){
+        if(JavaUtils.javaVersionCheck() < 11){
             System.setProperty("logback.configurationFile", "src/main/resources/logback-8.xml");
         }else {
             System.setProperty("logback.configurationFile", "src/main/resources/logback-17.xml");

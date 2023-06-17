@@ -1,10 +1,10 @@
-package de.cubeattack.api;
+package de.cubeattack.api.utils;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
 @SuppressWarnings("unused")
-public class RuntimeUsage {
+public class RuntimeUsageUtils {
 
     public static double getCpuUsage(){
         ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();

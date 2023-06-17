@@ -1,4 +1,4 @@
-package de.cubeattack.api;
+package de.cubeattack.api.minecraft;
 
 import de.cubeattack.api.logger.LogManager;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package de.cubeattack.api;
+package de.cubeattack.api.shutdown;
 
 @SuppressWarnings("unused")
 public class ShutdownHook
