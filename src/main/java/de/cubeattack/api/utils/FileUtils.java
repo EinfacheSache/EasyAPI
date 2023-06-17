@@ -34,12 +34,8 @@ public class FileUtils
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 Files.copy(inputStream, file.toPath());
-
-                if(skipLoading)return;
-
-                configuration.load(file);
-                configuration.save(file);
             }
+            if(skipLoading)return;
             configuration.load(file);
         } catch (IOException | InvalidConfigurationException ex) {
             LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
