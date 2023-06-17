@@ -1,5 +1,9 @@
 package de.cubeattack.api.language;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -21,6 +25,19 @@ public class Localization {
         this.resourceBundlePrefix = resourceBundlePrefix;
         this.defaultLocale = defaultLocale;
         this.loader = loader;
+    }
+
+    public Localization(String resourceBundlePrefix, Locale defaultLocale, File file) {
+        ClassLoader tempLoader;
+        this.resourceBundlePrefix = resourceBundlePrefix;
+        this.defaultLocale = defaultLocale;
+        try {
+            tempLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+        }catch (MalformedURLException ex){
+            ex.printStackTrace();
+            tempLoader = Localization.class.getClassLoader();
+        }
+        this.loader = tempLoader;
     }
 
     public String get(String key, Object... format) {
