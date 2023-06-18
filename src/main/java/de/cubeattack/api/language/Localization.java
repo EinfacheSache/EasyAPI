@@ -52,12 +52,14 @@ public class Localization {
             if (!bundle.containsKey(key)) {
                 LogManager.getLogger().error("The '" + locale.getDisplayLanguage(Locale.ENGLISH) + "' language file does not contain key '" + key + "'");
                 bundle = getDefaultResourceBundle();
-                if (!bundle.containsKey(key))
-                    return key;
+                if (!bundle.containsKey(key)) {
+                    bundle = getResourceBundle(Locale.ENGLISH);
+                    if (!bundle.containsKey(key)) {
+                        return key;
+                    }
+                }
             }
-            if (format.length == 0)
-                return bundle.getString(key);
-            return MessageFormat.format(bundle.getString(key), format);
+            return format.length == 0 ? bundle.getString(key) : MessageFormat.format(bundle.getString(key), format);
         } catch (MissingResourceException ex) {
             ex.printStackTrace();
             return key;
