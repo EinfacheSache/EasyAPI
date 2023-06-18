@@ -13,7 +13,7 @@
             <onMatch>DENY</onMatch>
         </filter>
         <encoder>
-            <pattern>\r% [%thread] %logColor([%level] %class - %msg%n)/></pattern>
+            <pattern>\r[%thread] %logColor([%level] %class - %msg%n)/></pattern>
         </encoder>
     </appender>
 
