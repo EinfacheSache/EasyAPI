@@ -1,5 +1,7 @@
 package de.cubeattack.api.language;
 
+import de.cubeattack.api.logger.LogManager;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,6 +50,7 @@ public class Localization {
         try {
             ResourceBundle bundle = getResourceBundle(locale);
             if (!bundle.containsKey(key)) {
+                LogManager.getLogger().error("The '" + locale.getDisplayLanguage(Locale.ENGLISH) + "' language file does not contain key '" + key + "'");
                 bundle = getDefaultResourceBundle();
                 if (!bundle.containsKey(key))
                     return key;
@@ -55,7 +58,8 @@ public class Localization {
             if (format.length == 0)
                 return bundle.getString(key);
             return MessageFormat.format(bundle.getString(key), format);
-        } catch (MissingResourceException e) {
+        } catch (MissingResourceException ex) {
+            ex.printStackTrace();
             return key;
         }
     }
@@ -63,7 +67,7 @@ public class Localization {
     private ResourceBundle getResourceBundle(Locale locale) {
         try {
             return ResourceBundle.getBundle(this.resourceBundlePrefix, locale, this.loader);
-        } catch (MissingResourceException e) {
+        } catch (MissingResourceException ex) {
             return getDefaultResourceBundle();
         }
     }
