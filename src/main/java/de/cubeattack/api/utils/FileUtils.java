@@ -20,11 +20,15 @@ public class FileUtils
     private final String fileName;
     private final File file;
 
-    public FileUtils(InputStream inputStream, String path, String fileName, boolean skipLoading) {
+    public FileUtils(InputStream inputStream, String folder, String fileName) {
+        this(inputStream, folder, fileName, false);
+    }
+
+    public FileUtils(InputStream inputStream, String folder, String fileName, boolean skipLoading) {
         this.fileName = fileName;
         this.inputStream = inputStream;
         this.configuration = new YamlConfiguration();
-        this.file = new File (path +  "/" + fileName);
+        this.file = new File (folder +  "/" + fileName);
         copyToFile(skipLoading);
         LogManager.getLogger().info("Loaded " + fileName + " successful");
     }
