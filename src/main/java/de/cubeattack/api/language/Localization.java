@@ -3,12 +3,17 @@ package de.cubeattack.api.language;
 import de.cubeattack.api.logger.LogManager;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("unused")
@@ -68,13 +73,29 @@ public class Localization {
 
     private ResourceBundle getResourceBundle(Locale locale) {
         try {
-            return ResourceBundle.getBundle(this.resourceBundlePrefix, locale, this.loader);
+            return ResourceBundle.getBundle(this.resourceBundlePrefix, locale, this.loader, new UTF8Control());
         } catch (MissingResourceException ex) {
             return getDefaultResourceBundle();
         }
     }
 
     public ResourceBundle getDefaultResourceBundle() {
-        return ResourceBundle.getBundle(this.resourceBundlePrefix, this.defaultLocale, this.loader);
+        return ResourceBundle.getBundle(this.resourceBundlePrefix, this.defaultLocale, this.loader, new UTF8Control());
+    }
+}
+class UTF8Control extends ResourceBundle.Control {
+    @Override
+    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+            throws IllegalAccessException, InstantiationException, IOException {
+        String bundleName = toBundleName(baseName, locale);
+        String resourceName = toResourceName(bundleName, "properties");
+        try (InputStream stream = loader.getResourceAsStream(resourceName)) {
+            if (stream != null) {
+                return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
+            }
+        } catch (Exception ex) {
+            // Handle exception
+        }
+        return super.newBundle(baseName, locale, format, loader, reload);
     }
 }
