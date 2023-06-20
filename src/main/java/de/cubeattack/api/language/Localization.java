@@ -85,17 +85,14 @@ public class Localization {
 }
 class UTF8Control extends ResourceBundle.Control {
     @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
-            throws IllegalAccessException, InstantiationException, IOException {
+    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
         String bundleName = toBundleName(baseName, locale);
         String resourceName = toResourceName(bundleName, "properties");
         try (InputStream stream = loader.getResourceAsStream(resourceName)) {
             if (stream != null) {
                 return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
             }
-        } catch (Exception ex) {
-            // Handle exception
-        }
+        } catch (Exception ignored) {}
         return super.newBundle(baseName, locale, format, loader, reload);
     }
 }
