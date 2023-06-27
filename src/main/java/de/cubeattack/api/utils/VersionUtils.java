@@ -76,10 +76,10 @@ public class VersionUtils {
                 int compareResult = compareVersions(currentVersion, latestVersion);
 
                 if (compareResult >= 0) {
-                    LogManager.getLogger().info("Plugin is up to date.");
+                    LogManager.getLogger().info("Plugin is up to date (version " + currentVersion + ")");
                     return new Result(true, null, null);
                 } else {
-                    LogManager.getLogger().warn("Plugin is outdated");
+                    LogManager.getLogger().warn("Plugin is outdated (version " + currentVersion + ")");
                     LogManager.getLogger().warn("Latest version: " + latestVersion);
                     LogManager.getLogger().warn("Release URL: " + releaseUrl);
                     return new Result(false, latestVersion, releaseUrl);
