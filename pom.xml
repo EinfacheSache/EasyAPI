@@ -18,6 +18,14 @@
         <target>${java.version}</target>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>easy-api</id>
+            <name>EasyAPI</name>
+            <url>https://github.com/EinfacheSache/EasyAPI</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
