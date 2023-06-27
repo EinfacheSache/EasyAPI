@@ -83,6 +83,7 @@ public class Localization {
         return ResourceBundle.getBundle(this.resourceBundlePrefix, this.defaultLocale, this.loader, new UTF8Control());
     }
 }
+
 class UTF8Control extends ResourceBundle.Control {
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {

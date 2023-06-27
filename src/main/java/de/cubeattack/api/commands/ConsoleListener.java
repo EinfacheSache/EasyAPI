@@ -1,7 +1,6 @@
 package de.cubeattack.api.commands;
 
 import de.cubeattack.api.logger.LogManager;
-import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,7 +14,6 @@ public class ConsoleListener
         run();
     }
 
-    private final Logger logger = LogManager.getLogger();
 
     private final List<ConsoleCommand> commands = new ArrayList<>();
 
@@ -34,7 +32,7 @@ public class ConsoleListener
                     String[] args = line.replace(line.split(" ")[0] + " ", "").split(" ");
 
                     if(commands.stream().noneMatch(consoleCommand -> consoleCommand.equalsCommand(cmd))) {
-                        logger.warn("Command not found");
+                        LogManager.getLogger().warn("Command not found");
                         continue;
                     }
 
@@ -47,7 +45,7 @@ public class ConsoleListener
                     }
                 }
             } catch (Exception ex) {
-                logger.error("Error whiles reading command : " + ex.getLocalizedMessage());
+                LogManager.getLogger().error("Error whiles reading command : " + ex.getLocalizedMessage());
             }
         }).start();
     }

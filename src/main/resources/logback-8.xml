@@ -5,6 +5,7 @@
     <!-- Configure logger -->
     <logger name="de.cubeattack" level="TRACE"/>
     <conversionRule conversionWord="logColor" converterClass="de.cubeattack.api.logger.HighlightingCompositeConverter"/>
+    <conversionRule conversionWord="source" converterClass="de.cubeattack.api.logger.CustomClassOfCallerConverter" />
 
     <!-- Appender Configuration [Console] -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -13,7 +14,7 @@
             <onMatch>DENY</onMatch>
         </filter>
         <encoder>
-            <pattern>\r[%thread] %logColor([%level] %class - %msg%n)/></pattern>
+            <pattern>\r[%thread] %logColor([%level] %source - %msg%n)/></pattern>
         </encoder>
     </appender>
 
