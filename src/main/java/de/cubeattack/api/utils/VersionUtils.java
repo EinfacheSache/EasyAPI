@@ -52,6 +52,7 @@ public class VersionUtils {
     }
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion) {
+
         try {
             URL url = new URL("https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -75,7 +76,7 @@ public class VersionUtils {
                 int compareResult = compareVersions(currentVersion, latestVersion);
 
                 if (compareResult >= 0) {
-                     LogManager.getLogger().warn("Plugin is up to date.");
+                    LogManager.getLogger().info("Plugin is up to date.");
                     return new Result(true, null, null);
                 } else {
                     LogManager.getLogger().warn("Plugin is outdated");
