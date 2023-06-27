@@ -24,7 +24,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>\r%d{yyyy-MM-dd HH:mm:ss} [%thread] %logColor([%level] %class::%method - %msg%n)/></pattern>
+            <pattern>\r%d{yyyy-MM-dd HH:mm:ss} [%thread] %logColor([%level] %source - %msg%n)/></pattern>
         </encoder>
     </appender>
 
@@ -32,7 +32,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/latest.log</file>
         <encoder> class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%level] %class::%method - %msg%n%ex</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%level] %source - %msg%n%ex</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/%d{yyyy-MM-dd}.log</fileNamePattern>
