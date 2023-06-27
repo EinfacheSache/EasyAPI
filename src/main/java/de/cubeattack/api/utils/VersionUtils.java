@@ -79,7 +79,7 @@ public class VersionUtils {
                     LogManager.getLogger().info("Plugin is up to date (version " + currentVersion + ")");
                     return new Result(true, null, null);
                 } else {
-                    LogManager.getLogger().warn("Plugin is outdated (version " + currentVersion + ")");
+                    LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ")");
                     LogManager.getLogger().warn("Latest version: " + latestVersion);
                     LogManager.getLogger().warn("Release URL: " + releaseUrl);
                     return new Result(false, latestVersion, releaseUrl);
