@@ -10,6 +10,9 @@ public class CustomClassOfCallerConverter extends ClassOfCallerConverter {
     public String convert(ILoggingEvent event) {
         StackTraceElement[] stackTrace = event.getCallerData();
         if (stackTrace != null && stackTrace.length > 0) {
+
+            System.out.println(Arrays.asList(stackTrace));
+
             StackTraceElement element = Arrays.asList(stackTrace).get(stackTrace.length-event.getCallerData().length == 2 ? 1 : 2);
             return element.getClassName() + ":" + element.getMethodName();
         }
