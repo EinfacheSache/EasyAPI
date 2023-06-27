@@ -24,8 +24,8 @@ public class LogManager
     public Object logger = LoggerFactory.getLogger("de.cubeattack");
 
 
-    public LogManager setLogger(Class<?> clazz) {
-        this.logger = LoggerFactory.getLogger(clazz);
+    public LogManager setLogger(Object logger) {
+        this.logger = logger;
         return this;
     }
     public LogManager setLevel(Object level) {
