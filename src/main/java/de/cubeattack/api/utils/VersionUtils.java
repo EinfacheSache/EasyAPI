@@ -75,41 +75,45 @@ public class VersionUtils {
 
                 int compareResult = compareVersions(currentVersion, latestVersion);
 
-                if (compareResult >= 0) {
+                if(compareResult > 0) {
+                    LogManager.getLogger().error("Plugin is on development version (" + currentVersion + ")");
+                    return new Result(VersionStatus.DEVELOPMENT, latestVersion, releaseUrl);
+                } else if (compareResult == 0) {
                     LogManager.getLogger().info("Plugin is up to date (" + currentVersion + ")");
-                    return new Result(true, null, null);
-                } else {
+                    return new Result(VersionStatus.LATEST, null, null);
+
+                }else {
                     LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ")");
                     LogManager.getLogger().warn("Latest version: " + latestVersion);
                     LogManager.getLogger().warn("Release URL: " + releaseUrl);
-                    return new Result(false, latestVersion, releaseUrl);
+                    return new Result(VersionStatus.OUTDATED, latestVersion, releaseUrl);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
         }
-        return new Result(true, null, null);
+        return new Result(VersionStatus.LATEST, null, null);
     }
 
-    private static int compareVersions(String version1, String version2) {
-        ComparableVersion v1 = new ComparableVersion(version1);
-        ComparableVersion v2 = new ComparableVersion(version2);
-        return v1.compareTo(v2);
+    private static int compareVersions(String currentVersion, String lastestVersion) {
+        ComparableVersion current = new ComparableVersion(currentVersion);
+        ComparableVersion latest = new ComparableVersion(lastestVersion);
+        return current.compareTo(latest);
     }
 
     public static class Result {
-        private final boolean isLatestVersion;
+        private final VersionStatus versionStatus;
         private final String latestVersion;
         private final String releaseUrl;
 
-        public Result(boolean isLatestVersion, String latestVersion, String releaseUrl) {
-            this.isLatestVersion = isLatestVersion;
+        public Result(VersionStatus versionStatus, String latestVersion, String releaseUrl) {
+            this.versionStatus = versionStatus;
             this.latestVersion = latestVersion;
             this.releaseUrl = releaseUrl;
         }
 
-        public boolean isLatestVersion() {
-            return isLatestVersion;
+        public VersionStatus VersionStatus() {
+            return versionStatus;
         }
 
         public String getLatestVersion() {
@@ -119,5 +123,11 @@ public class VersionUtils {
         public String getReleaseUrl() {
             return releaseUrl;
         }
+    }
+
+    public enum VersionStatus {
+        LATEST,
+        OUTDATED,
+        DEVELOPMENT;
     }
 }
