@@ -112,7 +112,7 @@ public class VersionUtils {
             this.releaseUrl = releaseUrl;
         }
 
-        public VersionStatus VersionStatus() {
+        public VersionStatus getVersionStatus() {
             return versionStatus;
         }
 
@@ -123,7 +123,14 @@ public class VersionUtils {
         public String getReleaseUrl() {
             return releaseUrl;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(!(obj instanceof VersionStatus))return false;
+            return versionStatus.equals(obj);
+        }
     }
+
 
     public enum VersionStatus {
         LATEST,
