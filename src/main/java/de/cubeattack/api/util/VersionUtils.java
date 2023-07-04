@@ -18,27 +18,31 @@ import java.util.regex.Pattern;
 public class VersionUtils {
 
     public static void main(String[] args) {
+
         System.out.println(getPomVersion());
         System.out.println(new File("pom.xml").getAbsolutePath());
     }
 
     public static String getPomVersion() {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("pom.xml").getAbsolutePath()));
+            File pomFile = new File("pom.xml");
+            String absolutePath = pomFile.getAbsolutePath();
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(absolutePath));
             String line;
             Pattern versionPattern = Pattern.compile("<version>(.*?)</version>");
 
             while ((line = bufferedReader.readLine()) != null) {
                 Matcher matcher = versionPattern.matcher(line);
                 if (matcher.find()) {
+                    bufferedReader.close();
                     return matcher.group(1);
                 }
             }
 
             bufferedReader.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
-            LogManager.getLogger().warn("Can't find version in pom.xml");
+            LogManager.getLogger().error("Error reading pom.xml file: ", ex);
         }
         return null;
     }
