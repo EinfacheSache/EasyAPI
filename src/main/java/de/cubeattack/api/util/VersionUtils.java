@@ -25,8 +25,9 @@ public class VersionUtils {
 
     public static String getPomVersion(Class<?> clazz) {
         try {
-            File pluginDirectory = new File(clazz.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+            File pluginDirectory = new File(clazz.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
 
+            System.out.println(pluginDirectory);
 
             File pomFile = new File(pluginDirectory, "pom.xml");
 
