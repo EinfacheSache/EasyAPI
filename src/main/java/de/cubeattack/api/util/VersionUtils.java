@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,14 +25,10 @@ public class VersionUtils {
 
     public static String getPomVersion(Class<?> clazz) {
         try {
+            File pluginDirectory = new File(clazz.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
+            File pomFile = new File(pluginDirectory, "pom.xml");
 
-
-            File pomFile = new File("./pom.xml");
-
-            if (!pomFile.exists()) {
-                LogManager.getLogger().warn("Can't find pom.xml file");
-                return null;
-            }
+            LogManager.getLogger().info("Absolute path of pom.xml: " + pomFile.getAbsolutePath()); // Hinzugefügter Code
 
             BufferedReader bufferedReader = new BufferedReader(new FileReader(pomFile));
             String line;
@@ -46,7 +43,7 @@ public class VersionUtils {
             }
 
             bufferedReader.close();
-        } catch (IOException ex) {
+        } catch (IOException | URISyntaxException ex) {
             LogManager.getLogger().warn("Error reading pom.xml file: " + ex.getMessage());
         }
         return null;
