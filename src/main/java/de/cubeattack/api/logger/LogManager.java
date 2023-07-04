@@ -59,6 +59,10 @@ public class LogManager
         if(logger instanceof Logger) ((Logger) logger).error(output);
         if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.SEVERE, output);
     }
+    public void error(String output, Throwable throwable){
+        if(logger instanceof Logger) ((Logger) logger).error(output, throwable);
+        if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.SEVERE, output, throwable);
+    }
 
     public void loggerTransfer() {
         java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger("");
