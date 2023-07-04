@@ -1,4 +1,4 @@
-package de.cubeattack.api.utils;
+package de.cubeattack.api.util;
 
 import de.cubeattack.api.logger.LogManager;
 import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;

@@ -2,7 +2,7 @@ package de.cubeattack.api.logger;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import de.cubeattack.api.utils.JavaUtils;
+import de.cubeattack.api.util.JavaUtils;
 import org.slf4j.LoggerFactory;
 
 import java.util.logging.Handler;

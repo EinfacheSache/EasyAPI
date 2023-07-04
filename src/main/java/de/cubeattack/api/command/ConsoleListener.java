@@ -1,4 +1,4 @@
-package de.cubeattack.api.commands;
+package de.cubeattack.api.command;
 
 import de.cubeattack.api.logger.LogManager;
 

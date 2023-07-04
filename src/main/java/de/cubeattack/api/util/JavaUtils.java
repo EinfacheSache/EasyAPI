@@ -1,4 +1,4 @@
-package de.cubeattack.api.utils;
+package de.cubeattack.api.util;
 
 public class JavaUtils {
 
