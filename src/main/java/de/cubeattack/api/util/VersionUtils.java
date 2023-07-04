@@ -17,9 +17,14 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class VersionUtils {
 
+    public static void main(String[] args) {
+        System.out.println(getPomVersion());
+        System.out.println(new File("pom.xml").getAbsolutePath());
+    }
+
     public static String getPomVersion() {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("pom.xml").getAbsoluteFile()));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("pom.xml").getAbsolutePath()));
             String line;
             Pattern versionPattern = Pattern.compile("<version>(.*?)</version>");
 
