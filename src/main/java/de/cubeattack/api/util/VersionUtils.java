@@ -5,10 +5,7 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -20,10 +17,9 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class VersionUtils {
 
-
     public static String getPomVersion() {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("pom.xml"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("pom.xml").getAbsoluteFile()));
             String line;
             Pattern versionPattern = Pattern.compile("<version>(.*?)</version>");
 
