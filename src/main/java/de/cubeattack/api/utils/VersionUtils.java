@@ -82,6 +82,8 @@ public class VersionUtils {
                 }else {
                     return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
                 }
+            }else {
+                LogManager.getLogger().warn("Version check failed '" + connection.getResponseMessage() + " (code: " + connection.getResponseCode() + ")'");
             }
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
