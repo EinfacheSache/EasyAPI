@@ -76,16 +76,10 @@ public class VersionUtils {
                 int compareResult = compareVersions((currentVersion.contains(":") ? currentVersion.split(":")[0] : currentVersion), latestVersion);
 
                 if(compareResult > 0) {
-                    LogManager.getLogger().error("Plugin is on development version (" + currentVersion + ")");
                     return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
                 } else if (compareResult == 0) {
-                    LogManager.getLogger().info("Plugin is up to date (" + currentVersion + ")");
                     return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
-
                 }else {
-                    LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ")");
-                    LogManager.getLogger().warn("Latest version: " + latestVersion);
-                    LogManager.getLogger().warn("Release URL: " + releaseUrl);
                     return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
                 }
             }
@@ -112,6 +106,18 @@ public class VersionUtils {
             this.currentVersion = currentVersion;
             this.latestVersion = latestVersion;
             this.releaseUrl = releaseUrl;
+        }
+
+        public void message(){
+            if(versionStatus == VersionStatus.DEVELOPMENT) {
+                LogManager.getLogger().error("Plugin is on development version (" + currentVersion + ")");
+            } else if (versionStatus == VersionStatus.LATEST) {
+                LogManager.getLogger().info("Plugin is up to date (" + currentVersion + ")");
+            }else {
+                LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ")");
+                LogManager.getLogger().warn("Latest version: " + latestVersion);
+                LogManager.getLogger().warn("Release URL: " + releaseUrl);
+            }
         }
 
         public VersionStatus getVersionStatus() {
