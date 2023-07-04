@@ -36,6 +36,7 @@ public class VersionUtils {
 
             bufferedReader.close();
         } catch (IOException ex) {
+            ex.printStackTrace();
             LogManager.getLogger().warn("Can't find version in pom.xml");
         }
         return null;
@@ -47,6 +48,7 @@ public class VersionUtils {
             properties.load(Files.newInputStream(Paths.get("buildNumber.properties")));
             return properties.getProperty("buildNumber");
         } catch (IOException ex) {
+            ex.printStackTrace();
             LogManager.getLogger().warn("Can't find buildNumber in buildNumber.properties");
         }
         return null;
