@@ -20,15 +20,24 @@ public class VersionUtils {
     public static void main(String[] args) {
 
         System.out.println(getPomVersion());
-        System.out.println(new File("pom.xml").getAbsolutePath());
     }
 
     public static String getPomVersion() {
         try {
-            File pomFile = new File("pom.xml");
-            String absolutePath = pomFile.getAbsolutePath();
+            String currentDirectory = System.getProperty("user.dir");
+            String absolutePath = currentDirectory + File.separator + "pom.xml";
 
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(absolutePath));
+            System.out.println(absolutePath);
+
+            File pomFile = new File(absolutePath);
+
+
+            if (!pomFile.exists()) {
+                LogManager.getLogger().warn("Can't find pom.xml file");
+                return null;
+            }
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(pomFile));
             String line;
             Pattern versionPattern = Pattern.compile("<version>(.*?)</version>");
 
@@ -42,7 +51,7 @@ public class VersionUtils {
 
             bufferedReader.close();
         } catch (IOException ex) {
-            LogManager.getLogger().error("Error reading pom.xml file: ", ex);
+            LogManager.getLogger().warn("Error reading pom.xml file: " + ex.getMessage());
         }
         return null;
     }
