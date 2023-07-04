@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class VersionUtils {
 
+
     public static String getPomVersion() {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("pom.xml"));

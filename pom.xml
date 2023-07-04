@@ -6,7 +6,7 @@
     <groupId>de.cubeattack</groupId>
     <artifactId>api</artifactId>
     <version>1.0</version>
-   <packaging>jar</packaging>
+    <packaging>jar</packaging>
 
     <name>api</name>
     <url>https://github.com/CubeAttack/EasyAPI/</url>
