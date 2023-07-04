@@ -73,7 +73,7 @@ public class VersionUtils {
                 String latestVersion = jsonResponse.getString("tag_name");
                 String releaseUrl = jsonResponse.getString("html_url");
 
-                int compareResult = compareVersions(currentVersion, latestVersion);
+                int compareResult = compareVersions((currentVersion.contains(":") ? currentVersion.split(":")[0] : currentVersion), latestVersion);
 
                 if(compareResult > 0) {
                     LogManager.getLogger().error("Plugin is on development version (" + currentVersion + ")");
