@@ -108,7 +108,7 @@ public class VersionUtils {
             this.releaseUrl = releaseUrl;
         }
 
-        public void message(){
+        public Result message(){
             if(versionStatus == VersionStatus.DEVELOPMENT) {
                 LogManager.getLogger().error("Plugin is on development version (" + currentVersion + ")");
             } else if (versionStatus == VersionStatus.LATEST) {
@@ -118,6 +118,7 @@ public class VersionUtils {
                 LogManager.getLogger().warn("Latest version: " + latestVersion);
                 LogManager.getLogger().warn("Release URL: " + releaseUrl);
             }
+            return this;
         }
 
         public VersionStatus getVersionStatus() {
