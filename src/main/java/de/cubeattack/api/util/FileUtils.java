@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils
@@ -30,28 +31,42 @@ public class FileUtils
         this.configuration = new YamlConfiguration();
         this.file = new File (folder +  "/" + fileName);
         copyToFile(skipLoading);
-        LogManager.getLogger().info("Loaded " + fileName + " successful");
     }
 
     private void copyToFile(boolean skipLoading) {
-        try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                Files.copy(inputStream, file.toPath());
+        CompletableFuture.runAsync(() -> {
+            try {
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    Files.copy(inputStream, file.toPath());
+                }
+
+                if (!skipLoading) {
+                    configuration.load(file);
+                }
+
+                LogManager.getLogger().info("The file '" + fileName + "' has been successfully loaded");
+            } catch (IOException | InvalidConfigurationException ex) {
+                LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
             }
-            if(skipLoading)return;
-            configuration.load(file);
-        } catch (IOException | InvalidConfigurationException ex) {
-            LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
-        }
+        }).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return null;
+        });
     }
 
     public void save() {
-        try {
-            configuration.save(file);
-        } catch (Exception ex) {
-            LogManager.getLogger().error("Error whiles saving " + fileName + " " + ex.getLocalizedMessage());
-        }
+        CompletableFuture.runAsync(() -> {
+            try {
+                configuration.save(file);
+                throw new IOException();
+            } catch (IOException ex) {
+                LogManager.getLogger().error("Error whiles saving " + fileName + " " + ex.getLocalizedMessage());
+            }
+        }).exceptionally(throwable -> {
+            throwable.printStackTrace();
+            return null;
+        });
     }
 
     public void set(String path, Object value) {
