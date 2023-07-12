@@ -49,16 +49,12 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>ch.qos.logback</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
+                                    <pattern>org</pattern>
+                                    <shadedPattern>de.cubeattack.api.libraries.org</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.json</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.bspfsystems</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
+                                    <pattern>ch.qos</pattern>
+                                    <shadedPattern>de.cubeattack.api.libraries.ch.qos</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
