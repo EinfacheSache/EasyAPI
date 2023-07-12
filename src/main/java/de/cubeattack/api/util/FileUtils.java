@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils
 {
 
+    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final YamlConfiguration configuration;
     private final InputStream inputStream;
     private final String fileName;
@@ -34,7 +36,7 @@ public class FileUtils
     }
 
     private void copyToFile(boolean skipLoading) {
-        CompletableFuture.runAsync(() -> {
+        executorService.submit(() -> {
             try {
                 if (!file.exists()) {
                     file.getParentFile().mkdirs();
@@ -49,23 +51,17 @@ public class FileUtils
             } catch (IOException | InvalidConfigurationException ex) {
                 LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
             }
-        }).exceptionally(throwable -> {
-            throwable.printStackTrace();
-            return null;
         });
     }
 
     public void save() {
-        CompletableFuture.runAsync(() -> {
+       executorService.submit(() -> {
             try {
                 configuration.save(file);
                 throw new IOException();
             } catch (IOException ex) {
                 LogManager.getLogger().error("Error whiles saving " + fileName + " " + ex.getLocalizedMessage());
             }
-        }).exceptionally(throwable -> {
-            throwable.printStackTrace();
-            return null;
         });
     }
 
