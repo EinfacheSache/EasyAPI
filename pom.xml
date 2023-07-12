@@ -49,8 +49,20 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>org.yaml</pattern>
-                                    <shadedPattern>de.cubeattack.libs</shadedPattern>
+                                    <pattern>ch.qos.logback</pattern>
+                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.json</pattern>
+                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.bspfsystems</pattern>
+                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.maven</pattern>
+                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

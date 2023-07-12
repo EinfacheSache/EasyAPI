@@ -18,11 +18,6 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class VersionUtils {
 
-    public static void main(String[] args) {
-
-        System.out.println(getPomVersion(VersionUtils.class));
-    }
-
     public static String getPomVersion(Class<?> clazz) {
         try {
             File pluginDirectory = new File(clazz.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
