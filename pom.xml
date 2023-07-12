@@ -60,10 +60,6 @@
                                     <pattern>org.bspfsystems</pattern>
                                     <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>org.apache.maven</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries</shadedPattern>
-                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
