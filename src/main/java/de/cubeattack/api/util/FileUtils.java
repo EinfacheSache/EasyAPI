@@ -36,21 +36,20 @@ public class FileUtils
     }
 
     private void copyToFile(boolean skipLoading) {
-        executorService.submit(() -> {
-            try {
-                if (!file.exists()) {
-                    file.getParentFile().mkdirs();
-                    Files.copy(inputStream, file.toPath());
-                }
-
-                if (!skipLoading) {
-                    configuration.load(file);
-                }
-            } catch (IOException | InvalidConfigurationException ex) {
-                LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
+        try {
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                Files.copy(inputStream, file.toPath());
             }
-        });
-        LogManager.getLogger().info("The file '" + fileName + "' has been successfully loaded");
+
+            if (!skipLoading) {
+                configuration.load(file);
+            }
+
+            LogManager.getLogger().info("The file '" + fileName + "' has been successfully loaded");
+        } catch (IOException | InvalidConfigurationException ex) {
+            LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
+        }
     }
 
     public void save() {
