@@ -51,10 +51,10 @@
                                 <relocation>
                                     <pattern>org</pattern>
                                     <shadedPattern>de.cubeattack.api.libraries.org</shadedPattern>
+                                    <excludes>
+                                        <exclude>org.slf4j</exclude>
+                                    </excludes>
                                 </relocation>
-                                <excludes>
-                                    <exclude>org.slf4j</exclude>
-                                </excludes>
                             </relocations>
                         </configuration>
                     </execution>
