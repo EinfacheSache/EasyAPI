@@ -46,12 +46,11 @@ public class FileUtils
                 if (!skipLoading) {
                     configuration.load(file);
                 }
-
-                LogManager.getLogger().info("The file '" + fileName + "' has been successfully loaded");
             } catch (IOException | InvalidConfigurationException ex) {
                 LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
             }
         });
+        LogManager.getLogger().info("The file '" + fileName + "' has been successfully loaded");
     }
 
     public void save() {
