@@ -56,7 +56,6 @@ public class FileUtils
        executorService.submit(() -> {
             try {
                 configuration.save(file);
-                throw new IOException();
             } catch (IOException ex) {
                 LogManager.getLogger().error("Error whiles saving " + fileName + " " + ex.getLocalizedMessage());
             }
