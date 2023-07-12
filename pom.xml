@@ -52,10 +52,6 @@
                                     <pattern>org</pattern>
                                     <shadedPattern>de.cubeattack.api.libraries.org</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>ch.qos</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries.ch.qos</shadedPattern>
-                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
