@@ -6,9 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -90,7 +88,10 @@ public class VersionUtils {
             }else {
                 LogManager.getLogger().warn("Version check failed '" + connection.getResponseMessage() + " (code: " + connection.getResponseCode() + ")'");
             }
-        } catch (Exception e) {
+        }catch (UnknownHostException | SocketTimeoutException | SocketException connectionException){
+            LogManager.getLogger().error(connectionException.getMessage());
+        }
+        catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
         }
         return new Result(VersionStatus.LATEST,null, null, null);
