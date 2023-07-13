@@ -46,7 +46,7 @@ public class FileUtils
                 configuration.load(file);
             }
 
-            LogManager.getLogger().info("The file '" + fileName + "' has been successfully loaded");
+            LogManager.getLogger().info("The file " + fileName + " has been successfully loaded");
         } catch (IOException | InvalidConfigurationException ex) {
             LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
         }
