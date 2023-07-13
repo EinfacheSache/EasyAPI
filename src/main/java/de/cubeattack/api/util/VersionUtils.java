@@ -89,7 +89,7 @@ public class VersionUtils {
                 LogManager.getLogger().warn("Version check failed '" + connection.getResponseMessage() + " (code: " + connection.getResponseCode() + ")'");
             }
         }catch (UnknownHostException | SocketTimeoutException | SocketException connectionException){
-            LogManager.getLogger().error(connectionException.getMessage());
+            LogManager.getLogger().error("Exception trying to get the latest plugin version : " + connectionException.getMessage());
         }
         catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
