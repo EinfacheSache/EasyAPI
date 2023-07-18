@@ -49,10 +49,6 @@
                         <configuration>
                             <relocations>
                                 <relocation>
-                                    <pattern>ch.qos</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries.ch.qos</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>org</pattern>
                                     <shadedPattern>de.cubeattack.api.libraries.org</shadedPattern>
                                     <excludes>
