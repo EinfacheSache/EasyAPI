@@ -237,6 +237,8 @@ public class VersionUtils {
                             try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:/" + file.getAbsoluteFile())})) {
                                 System.out.println("file:/" + file.getAbsoluteFile());
                                 System.out.println(classLoader);
+                                System.out.println(classLoader.findResources("bungee.yml").hasMoreElements());
+                                System.out.println(classLoader.getParent().getResourceAsStream("bungee.yml"));
                                 System.err.println(classLoader.getResourceAsStream("bungee.yml"));
                                 Scanner sc = new Scanner(Objects.requireNonNull(classLoader.getResourceAsStream(entryName)));
                                 while (sc.hasNextLine()) {
