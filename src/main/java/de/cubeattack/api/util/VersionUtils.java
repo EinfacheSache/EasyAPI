@@ -235,6 +235,8 @@ public class VersionUtils {
                         if (entryName.equals("plugin.yml")) {
 
                             try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:/" + file.getAbsoluteFile())})) {
+                                System.out.println("file:/" + file.getAbsoluteFile());
+                                System.out.println(classLoader);
                                 System.err.println(classLoader.getResourceAsStream("bungee.yml"));
                                 Scanner sc = new Scanner(Objects.requireNonNull(classLoader.getResourceAsStream(entryName)));
                                 while (sc.hasNextLine()) {
