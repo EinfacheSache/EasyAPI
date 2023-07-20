@@ -111,10 +111,10 @@ public class VersionUtils {
             try {
                 LogManager.getLogger().info("Deleting the old plugin version...");
                 long deletingTime = AutoUpdater.deleteOldVersion(oldVersionFile);
-                LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + ")");
+                LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
                 LogManager.getLogger().info("Download the latest version " + latestVersion + "...");
                 long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
-                LogManager.getLogger().info("Update finished! (took " + updateTime + ")");
+                LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
                 return latestVersion;
             } catch (IOException e) {
                 e.printStackTrace();
