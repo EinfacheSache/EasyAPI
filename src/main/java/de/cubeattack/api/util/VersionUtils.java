@@ -80,6 +80,11 @@ public class VersionUtils {
                 int compareResult = compareVersions((currentVersion.contains(":") ? currentVersion.split(":")[0] : currentVersion), latestVersion);
 
                 if (compareResult > 0) {
+                    long start = System.currentTimeMillis();
+                    if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
+                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, oldVersionFile).get();
+                        return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
+                    }
                     return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
                 } else if (compareResult == 0) {
                     return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
@@ -89,7 +94,6 @@ public class VersionUtils {
                         latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, oldVersionFile).get();
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
-
                     return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
                 }
             } else {
