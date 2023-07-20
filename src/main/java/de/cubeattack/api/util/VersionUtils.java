@@ -106,15 +106,15 @@ public class VersionUtils {
         return API.getExecutorService().submit(() -> {
             if (latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestVersion;
 
-            System.out.println(downloadURL);
+            LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
             try {
-                System.out.println("Deleting the old plugin version...");
-                long deletingTime = FileScanner.deleteOldVersion(oldVersionFile);
-                System.out.println("Completed deleting old plugin version! (took " + deletingTime + ")");
-                System.out.println("Download the latest version " + latestVersion + "...");
+                LogManager.getLogger().info("Deleting the old plugin version...");
+                long deletingTime = AutoUpdater.deleteOldVersion(oldVersionFile);
+                LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + ")");
+                LogManager.getLogger().info("Download the latest version " + latestVersion + "...");
                 long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
-                System.out.println("Update finished! (took " + updateTime + ")");
+                LogManager.getLogger().info("Update finished! (took " + updateTime + ")");
                 return latestVersion;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -127,6 +127,41 @@ public class VersionUtils {
         ComparableVersion current = new ComparableVersion(currentVersion);
         ComparableVersion latest = new ComparableVersion(lastestVersion);
         return current.compareTo(latest);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static class AutoUpdater {
+
+        public static long downloadFile(String downloadURL, String fileName) throws IOException {
+            long startTime = System.currentTimeMillis();
+            File file = new File(fileName);
+            URL url = new URL(downloadURL);
+
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+            }
+
+            try (InputStream in = url.openStream();
+                 FileOutputStream out = new FileOutputStream(file)) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+                return System.currentTimeMillis() - startTime;
+            }
+        }
+
+        public static long deleteOldVersion(String oldVersionFile) {
+            long startTime = System.currentTimeMillis();
+
+            File file = new File(oldVersionFile);
+
+            if(!file.exists())return -2;
+            if(!file.delete())return -1;
+
+            return System.currentTimeMillis() - startTime;
+        }
     }
 
     public static class Result {
@@ -181,42 +216,5 @@ public class VersionUtils {
         OUTDATED,
         DEVELOPMENT,
         REQUIRED_RESTART
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static class AutoUpdater {
-
-        public static long downloadFile(String downloadURL, String fileName) throws IOException {
-            long startTime = System.currentTimeMillis();
-            File file = new File(fileName);
-            URL url = new URL(downloadURL);
-
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-            }
-
-            try (InputStream in = url.openStream();
-                 FileOutputStream out = new FileOutputStream(file)) {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, bytesRead);
-                }
-                return System.currentTimeMillis() - startTime;
-            }
-        }
-    }
-
-    public static class FileScanner {
-        public static long deleteOldVersion(String oldVersionFile) {
-            long startTime = System.currentTimeMillis();
-
-            File file = new File(oldVersionFile);
-
-            if(!file.exists())return -2;
-            if(!file.delete())return -1;
-
-            return System.currentTimeMillis() - startTime;
-        }
     }
 }
