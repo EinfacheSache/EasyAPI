@@ -53,7 +53,7 @@ public class VersionUtils {
         return null;
     }
 
-    public static String getBuild(){
+    public static String getBuild() {
         try {
             Properties properties = new Properties();
             properties.load(Files.newInputStream(Paths.get("buildNumber.properties")));
@@ -63,6 +63,11 @@ public class VersionUtils {
             LogManager.getLogger().warn("Can't find buildNumber in buildNumber.properties");
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        checkVersion("NeoProtect", "NeoPlugin", "v1.1.8-Beta", true).message();
+        API.getExecutorService().shutdown();
     }
 
     private static String latestUpdatedVersion = null;
@@ -91,7 +96,7 @@ public class VersionUtils {
                 } else {
                     long start = System.currentTimeMillis();
                     if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
-                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoPlugin-" + latestVersion + ".jar", latestVersion).get();
+                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion).get();
                         System.out.println(System.currentTimeMillis() - start);
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
@@ -104,19 +109,19 @@ public class VersionUtils {
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
         }
-        return new Result(VersionStatus.LATEST,null, null, null);
+        return new Result(VersionStatus.LATEST, null, null, null);
     }
 
     public static Future<String> updateToLatestVersion(String urlString, String savePath, String latestVersion) {
 
         return API.getExecutorService().submit(() -> {
-            if(latestVersion.equalsIgnoreCase(latestUpdatedVersion))return latestVersion;
+            if (latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestVersion;
 
             System.out.println(urlString);
 
-            try  {
+            try {
                 System.out.println("Deleting the old plugin version...");
-                long deletingTime =  FileScanner.deleteOldVersion();
+                long deletingTime = FileScanner.deleteOldVersion();
                 System.out.println("Completed deleting old plugin version! (took " + deletingTime + ")");
                 System.out.println("Download the latest version " + latestVersion + "...");
                 long updateTime = AutoUpdater.downloadFile(urlString, savePath);
@@ -148,12 +153,16 @@ public class VersionUtils {
             this.releaseUrl = releaseUrl;
         }
 
-        public Result message(){
-            if(versionStatus == VersionStatus.DEVELOPMENT) {
+        public Result message() {
+            if (versionStatus == VersionStatus.DEVELOPMENT) {
                 LogManager.getLogger().error("Plugin is on development version (" + currentVersion + ")");
             } else if (versionStatus == VersionStatus.LATEST) {
                 LogManager.getLogger().info("Plugin is up to date (" + currentVersion + ")");
-            }else {
+            } else if (versionStatus == VersionStatus.REQUIRED_RESTART) {
+                LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ") and requires a restart" );
+                LogManager.getLogger().warn("Current version: " + currentVersion);
+                LogManager.getLogger().warn("Version after restart: " + latestVersion);
+            } else {
                 LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ")");
                 LogManager.getLogger().warn("Latest version: " + latestVersion);
                 LogManager.getLogger().warn("Release URL: " + releaseUrl);
@@ -226,7 +235,8 @@ public class VersionUtils {
                         if (entryName.equals("plugin.yml")) {
 
                             try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:/" + file.getAbsoluteFile())})) {
-                                Scanner sc = new Scanner(Objects.requireNonNull(classLoader.getResourceAsStream("plugin.yml")));
+                                System.err.println(classLoader.getResourceAsStream("bungee.yml"));
+                                Scanner sc = new Scanner(Objects.requireNonNull(classLoader.getResourceAsStream(entryName)));
                                 while (sc.hasNextLine()) {
                                     if (sc.nextLine().equals("name: NeoProtect")) {
 
