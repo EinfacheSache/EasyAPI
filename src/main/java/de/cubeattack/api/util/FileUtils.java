@@ -1,5 +1,6 @@
 package de.cubeattack.api.util;
 
+import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;
 import org.bspfsystems.yamlconfiguration.configuration.InvalidConfigurationException;
@@ -10,14 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils
 {
-
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final YamlConfiguration configuration;
     private final InputStream inputStream;
     private final String fileName;
@@ -53,7 +50,7 @@ public class FileUtils
     }
 
     public void save() {
-       executorService.submit(() -> {
+       API.getExecutorService().submit(() -> {
             try {
                 configuration.save(file);
             } catch (IOException ex) {
