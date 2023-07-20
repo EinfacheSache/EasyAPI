@@ -59,6 +59,10 @@ public class FileUtils
         });
     }
 
+    public void remove(String path) {
+        this.getConfig().set(path, null);
+    }
+
     public void set(String path, Object value) {
         this.getConfig().set(path, value);
     }
