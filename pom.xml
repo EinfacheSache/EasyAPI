@@ -89,6 +89,14 @@
             <version>1.3.2</version>
         </dependency>
 
+
+        <!-- Needed for WebRequests -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>5.0.0-alpha.11</version>
+        </dependency>
+
         <!-- Needed for VersionUtils -->
         <dependency>
             <groupId>org.apache.maven</groupId>
