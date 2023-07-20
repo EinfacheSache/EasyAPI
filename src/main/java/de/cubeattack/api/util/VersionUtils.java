@@ -65,7 +65,7 @@ public class VersionUtils {
         return null;
     }
 
-    private static String lastestUpdatedVersion = null;
+    private static String latestUpdatedVersion = null;
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate) {
 
@@ -90,8 +90,8 @@ public class VersionUtils {
                     return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
                 } else {
                     long start = System.currentTimeMillis();
-                    if (autoUpdate && !lastestUpdatedVersion.equalsIgnoreCase(latestVersion)) {
-                        lastestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoPlugin-" + latestVersion + ".jar", latestVersion).get();
+                    if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
+                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoPlugin-" + latestVersion + ".jar", latestVersion).get();
                         System.out.println(System.currentTimeMillis() - start);
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
@@ -110,7 +110,7 @@ public class VersionUtils {
     public static Future<String> updateToLatestVersion(String urlString, String savePath, String latestVersion) {
 
         return API.getExecutorService().submit(() -> {
-            if(latestVersion.equalsIgnoreCase(lastestUpdatedVersion))return latestVersion;
+            if(latestVersion.equalsIgnoreCase(latestUpdatedVersion))return latestVersion;
 
             System.out.println(urlString);
 
