@@ -11,16 +11,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.Objects;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.concurrent.Future;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,14 +59,10 @@ public class VersionUtils {
         return null;
     }
 
-    public static void main(String[] args) {
-        checkVersion("NeoProtect", "NeoPlugin", "v1.1.8-Beta", true).message();
-        API.getExecutorService().shutdown();
-    }
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate, String oldVersionFile) {
 
         RestAPIUtils restAPIUtils = new RestAPIUtils();
         String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
@@ -96,8 +86,7 @@ public class VersionUtils {
                 } else {
                     long start = System.currentTimeMillis();
                     if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
-                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion).get();
-                        System.out.println(System.currentTimeMillis() - start);
+                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, oldVersionFile).get();
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
 
@@ -112,19 +101,19 @@ public class VersionUtils {
         return new Result(VersionStatus.LATEST, null, null, null);
     }
 
-    public static Future<String> updateToLatestVersion(String urlString, String savePath, String latestVersion) {
+    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestVersion, String oldVersionFile) {
 
         return API.getExecutorService().submit(() -> {
             if (latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestVersion;
 
-            System.out.println(urlString);
+            System.out.println(downloadURL);
 
             try {
                 System.out.println("Deleting the old plugin version...");
-                long deletingTime = FileScanner.deleteOldVersion();
+                long deletingTime = FileScanner.deleteOldVersion(oldVersionFile);
                 System.out.println("Completed deleting old plugin version! (took " + deletingTime + ")");
                 System.out.println("Download the latest version " + latestVersion + "...");
-                long updateTime = AutoUpdater.downloadFile(urlString, savePath);
+                long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
                 System.out.println("Update finished! (took " + updateTime + ")");
                 return latestVersion;
             } catch (IOException e) {
@@ -159,7 +148,7 @@ public class VersionUtils {
             } else if (versionStatus == VersionStatus.LATEST) {
                 LogManager.getLogger().info("Plugin is up to date (" + currentVersion + ")");
             } else if (versionStatus == VersionStatus.REQUIRED_RESTART) {
-                LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ") and requires a restart" );
+                LogManager.getLogger().warn("Plugin is outdated (" + currentVersion + ") and requires a restart");
                 LogManager.getLogger().warn("Current version: " + currentVersion);
                 LogManager.getLogger().warn("Version after restart: " + latestVersion);
             } else {
@@ -197,10 +186,10 @@ public class VersionUtils {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static class AutoUpdater {
 
-        public static long downloadFile(String fileURL, String fileName) throws IOException {
+        public static long downloadFile(String downloadURL, String fileName) throws IOException {
             long startTime = System.currentTimeMillis();
             File file = new File(fileName);
-            URL url = new URL(fileURL);
+            URL url = new URL(downloadURL);
 
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
@@ -219,49 +208,14 @@ public class VersionUtils {
     }
 
     public static class FileScanner {
-        public static long deleteOldVersion() {
-
+        public static long deleteOldVersion(String oldVersionFile) {
             long startTime = System.currentTimeMillis();
 
-            File folder = new File("plugins");
+            File file = new File(oldVersionFile);
 
-            for (File file : Objects.requireNonNull(folder.listFiles())) {
-                try (JarFile jarFile = new JarFile(file.getAbsoluteFile())) {
-                    Enumeration<JarEntry> entries = jarFile.entries();
-                    while (entries.hasMoreElements()) {
-                        JarEntry entry = entries.nextElement();
-                        String entryName = entry.getName();
+            if(file.exists())return -1;
+            if(file.delete())return -1;
 
-                        if (entryName.equals("plugin.yml")) {
-
-                            try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new URL("file:/" + file.getAbsoluteFile())})) {
-                                System.out.println("file:/" + file.getAbsoluteFile());
-                                System.out.println(classLoader);
-                                System.out.println(classLoader.findResources("bungee.yml").hasMoreElements());
-                                System.out.println(classLoader.getParent().getResourceAsStream("bungee.yml"));
-                                System.err.println(classLoader.getResourceAsStream("bungee.yml"));
-                                Scanner sc = new Scanner(Objects.requireNonNull(classLoader.getResourceAsStream(entryName)));
-                                while (sc.hasNextLine()) {
-                                    if (sc.nextLine().equals("name: NeoProtect")) {
-
-                                        jarFile.close();
-                                        classLoader.close();
-
-                                        System.err.println("delete");
-                                        System.out.println(file.getName());
-                                        System.out.println(file.delete());
-
-                                        return System.currentTimeMillis() - startTime;
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             return System.currentTimeMillis() - startTime;
         }
     }
