@@ -213,7 +213,7 @@ public class VersionUtils {
 
             File file = new File(oldVersionFile);
 
-            if(file.exists())return -1;
+            if(file.exists())return -2;
             if(file.delete())return -1;
 
             return System.currentTimeMillis() - startTime;
