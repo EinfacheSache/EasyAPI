@@ -74,35 +74,36 @@ public class VersionUtils {
         try {
             Response response = restAPIUtils.request("GET", url, null);
 
-            if (response.code() == HttpURLConnection.HTTP_OK) {
-
-                JSONObject jsonResponse = new JSONObject(getBody(response));
-                String downloadURL = jsonResponse.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
-                String latestVersion = jsonResponse.getString("tag_name");
-                String releaseUrl = jsonResponse.getString("html_url");
-
-                int compareResult = compareVersions((currentVersion.contains(":") ? currentVersion.split(":")[0] : currentVersion), latestVersion);
-
-                if (compareResult > 0) {
-                    long start = System.currentTimeMillis();
-                    if (autoUpdate) {
-                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
-                        return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
-                    }
-                    return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
-                } else if (compareResult == 0) {
-                    return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
-                } else {
-                    long start = System.currentTimeMillis();
-                    if (autoUpdate) {
-                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
-                        return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
-                    }
-                    return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
-                }
-            } else {
-                LogManager.getLogger().warn("Version check failed '" + response + " (code: " + response.code() + ")'");
+            if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
+                LogManager.getLogger().warn("Version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
+                return new Result(VersionStatus.LATEST, null, null, null);
             }
+
+            JSONObject jsonResponse = new JSONObject(getBody(response));
+            String downloadURL = jsonResponse.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+            String latestVersion = jsonResponse.getString("tag_name");
+            String releaseUrl = jsonResponse.getString("html_url");
+
+            int compareResult = compareVersions((currentVersion.contains(":") ? currentVersion.split(":")[0] : currentVersion), latestVersion);
+
+            if (compareResult > 0) {
+                long start = System.currentTimeMillis();
+                if (autoUpdate) {
+                    updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
+                    return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
+                }
+                return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
+            } else if (compareResult == 0) {
+                return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
+            } else {
+                long start = System.currentTimeMillis();
+                if (autoUpdate) {
+                    updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
+                    return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
+                }
+                return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
+            }
+
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
         }
@@ -121,7 +122,7 @@ public class VersionUtils {
 
     public static void updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
 
-        if(latestRelease.equalsIgnoreCase(latestUpdatedVersion))return;
+        if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return;
 
         API.getExecutorService().submit(() -> {
 
@@ -189,9 +190,9 @@ public class VersionUtils {
                     try (InputStream in = jar.getInputStream(entry)) {
                         HashMap<String, Object> description = new Yaml().load(in);
 
-                        if(description.get("name").toString().equalsIgnoreCase("NeoProtect")){
-                            if(!file.exists())return -2;
-                            if(!file.delete())return -1;
+                        if (description.get("name").toString().equalsIgnoreCase("NeoProtect")) {
+                            if (!file.exists()) return -2;
+                            if (!file.delete()) return -1;
                             return System.currentTimeMillis() - startTime;
                         }
                     }
