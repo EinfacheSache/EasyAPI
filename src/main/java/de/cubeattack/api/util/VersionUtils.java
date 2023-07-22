@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.Future;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -86,8 +85,8 @@ public class VersionUtils {
 
                 if (compareResult > 0) {
                     long start = System.currentTimeMillis();
-                    if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
-                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion).get();
+                    if (autoUpdate) {
+                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
                     return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
@@ -95,8 +94,8 @@ public class VersionUtils {
                     return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
                 } else {
                     long start = System.currentTimeMillis();
-                    if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
-                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion).get();
+                    if (autoUpdate) {
+                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
                     return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
@@ -120,9 +119,11 @@ public class VersionUtils {
     }
 
 
-    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
+    public static void updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
 
-        return API.getExecutorService().submit(() -> {
+        if(latestRelease.equalsIgnoreCase(latestUpdatedVersion))return;
+
+        API.getExecutorService().submit(() -> {
 
             LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
@@ -133,10 +134,9 @@ public class VersionUtils {
                 LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
                 long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
                 LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
-                return latestRelease;
+                latestUpdatedVersion = latestRelease;
             } catch (IOException e) {
                 e.printStackTrace();
-                return null;
             }
         });
     }
