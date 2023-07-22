@@ -64,7 +64,6 @@ public class VersionUtils {
         return null;
     }
 
-
     private static String latestUpdatedVersion = null;
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate) {
@@ -74,8 +73,7 @@ public class VersionUtils {
 
         try (Response response = restAPIUtils.request("GET", url, null)) {
 
-            int responseCode = response.code();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (response.code() == HttpURLConnection.HTTP_OK) {
 
                 JSONObject jsonResponse = new JSONObject(response.body().string());
                 String downloadURL = jsonResponse.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
@@ -179,7 +177,6 @@ public class VersionUtils {
 
                     try (InputStream in = jar.getInputStream(entry)) {
                         HashMap<String, Object> description = new Yaml().load(in);
-                        System.out.println(description.get("name"));
 
                         if(description.get("name").toString().equalsIgnoreCase("NeoProtect")){
                             if(!file.exists())return -2;
