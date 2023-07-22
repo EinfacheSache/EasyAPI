@@ -1,8 +1,9 @@
 package de.cubeattack.api.util;
 
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
-import okhttp3.Response;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -71,11 +72,12 @@ public class VersionUtils {
         RestAPIUtils restAPIUtils = new RestAPIUtils();
         String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
 
-        try (Response response = restAPIUtils.request("GET", url, null)) {
+        try {
+            Response response = restAPIUtils.request("GET", url, null);
 
             if (response.code() == HttpURLConnection.HTTP_OK) {
 
-                JSONObject jsonResponse = new JSONObject(response.body().string());
+                JSONObject jsonResponse = new JSONObject(getBody(response));
                 String downloadURL = jsonResponse.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
                 String latestVersion = jsonResponse.getString("tag_name");
                 String releaseUrl = jsonResponse.getString("html_url");
@@ -106,6 +108,15 @@ public class VersionUtils {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
         }
         return new Result(VersionStatus.LATEST, null, null, null);
+    }
+
+    private static String getBody(Response response) {
+        try (ResponseBody body = response.body()) {
+            return body.string();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return "{}";
+        }
     }
 
 

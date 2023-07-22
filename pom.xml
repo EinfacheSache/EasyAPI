@@ -91,9 +91,9 @@
 
         <!-- Needed for WebRequests -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
+            <groupId>com.squareup.okhttp</groupId>
             <artifactId>okhttp</artifactId>
-            <version>5.0.0-alpha.11</version>
+            <version>2.7.5</version>
         </dependency>
 
         <!-- Needed for VersionUtils -->
