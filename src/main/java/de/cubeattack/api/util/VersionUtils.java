@@ -6,6 +6,7 @@ import okhttp3.Response;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -13,8 +14,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Future;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +67,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate, String oldVersionFile) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate) {
 
         RestAPIUtils restAPIUtils = new RestAPIUtils();
         String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
@@ -82,7 +87,7 @@ public class VersionUtils {
                 if (compareResult > 0) {
                     long start = System.currentTimeMillis();
                     if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
-                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, oldVersionFile).get();
+                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion).get();
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
                     return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
@@ -91,7 +96,7 @@ public class VersionUtils {
                 } else {
                     long start = System.currentTimeMillis();
                     if (autoUpdate && !latestVersion.equalsIgnoreCase(latestUpdatedVersion)) {
-                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, oldVersionFile).get();
+                        latestUpdatedVersion = updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion).get();
                         return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                     }
                     return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
@@ -105,21 +110,21 @@ public class VersionUtils {
         return new Result(VersionStatus.LATEST, null, null, null);
     }
 
-    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestVersion, String oldVersionFile) {
+
+    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
 
         return API.getExecutorService().submit(() -> {
-            if (latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestVersion;
 
             LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
             try {
                 LogManager.getLogger().info("Deleting the old plugin version...");
-                long deletingTime = AutoUpdater.deleteOldVersion(oldVersionFile);
+                long deletingTime = AutoUpdater.deleteOldVersion();
                 LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
-                LogManager.getLogger().info("Download the latest version " + latestVersion + "...");
+                LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
                 long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
                 LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
-                return latestVersion;
+                return latestRelease;
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -156,15 +161,37 @@ public class VersionUtils {
             }
         }
 
-        public static long deleteOldVersion(String oldVersionFile) {
+        public static long deleteOldVersion() {
             long startTime = System.currentTimeMillis();
 
-            File file = new File(oldVersionFile);
+            for (File file : Objects.requireNonNull(new File("./plugins/").listFiles())) {
 
-            if(!file.exists())return -2;
-            if(!file.delete())return -1;
+                if (file.isDirectory()) {
+                    continue;
+                }
 
-            return System.currentTimeMillis() - startTime;
+                try (JarFile jar = new JarFile(file)) {
+                    JarEntry entry = jar.getJarEntry("plugin.yml");
+
+                    if (entry == null) {
+                        throw new RuntimeException();
+                    }
+
+                    try (InputStream in = jar.getInputStream(entry)) {
+                        HashMap<String, Object> description = new Yaml().load(in);
+                        System.out.println(description.get("name"));
+
+                        if(description.get("name").toString().equalsIgnoreCase("NeoProtect")){
+                            if(!file.exists())return -2;
+                            if(!file.delete())return -1;
+                            return System.currentTimeMillis() - startTime;
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return Integer.MIN_VALUE;
         }
     }
 
