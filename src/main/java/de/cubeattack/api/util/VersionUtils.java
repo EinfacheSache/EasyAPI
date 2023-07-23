@@ -66,7 +66,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, boolean autoUpdate) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, UpdateSetting autoUpdate) {
 
         RestAPIUtils restAPIUtils = new RestAPIUtils();
         String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
@@ -88,7 +88,7 @@ public class VersionUtils {
 
             if (compareResult > 0) {
                 long start = System.currentTimeMillis();
-                if (autoUpdate) {
+                if (autoUpdate.equals(UpdateSetting.ENABLED)) {
                     updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
                     return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                 }
@@ -97,7 +97,7 @@ public class VersionUtils {
                 return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
             } else {
                 long start = System.currentTimeMillis();
-                if (autoUpdate) {
+                if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
                     updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
                     return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
                 }
@@ -256,5 +256,19 @@ public class VersionUtils {
         OUTDATED,
         DEVELOPMENT,
         REQUIRED_RESTART
+    }
+
+    public enum UpdateSetting {
+        DEV,
+        ENABLED,
+        DISABLED;
+        public static UpdateSetting getDayByValue(String value) {
+            for (UpdateSetting setting : UpdateSetting.values()) {
+                if (setting.name().equalsIgnoreCase(value)) {
+                    return setting;
+                }
+            }
+            return UpdateSetting.ENABLED;
+        }
     }
 }
