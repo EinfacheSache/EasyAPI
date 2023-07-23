@@ -262,7 +262,7 @@ public class VersionUtils {
         DEV,
         ENABLED,
         DISABLED;
-        public static UpdateSetting getDayByValue(String value) {
+        public static UpdateSetting getByNameOrDefault(String value) {
             for (UpdateSetting setting : UpdateSetting.values()) {
                 if (setting.name().equalsIgnoreCase(value)) {
                     return setting;
