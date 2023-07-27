@@ -2,7 +2,6 @@ package de.cubeattack.api.util;
 
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
-import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.jetbrains.annotations.NotNull;
@@ -124,22 +123,21 @@ public class VersionUtils {
 
         if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return;
 
-        API.getExecutorService().submit(() -> {
 
-            LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
+        LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
-            try {
-                LogManager.getLogger().info("Deleting the old plugin version...");
-                long deletingTime = AutoUpdater.deleteOldVersion();
-                LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
-                LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
-                long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
-                LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
-                latestUpdatedVersion = latestRelease;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            LogManager.getLogger().info("Deleting the old plugin version...");
+            long deletingTime = AutoUpdater.deleteOldVersion();
+            LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
+            LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
+            long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
+            LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
+            latestUpdatedVersion = latestRelease;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static int compareVersions(String currentVersion, String lastestVersion) {
