@@ -2,6 +2,7 @@ package de.cubeattack.api.util;
 
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
+import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,7 @@ public class VersionUtils {
             properties.load(Files.newInputStream(Paths.get("buildNumber.properties")));
             return properties.getProperty("buildNumber");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             LogManager.getLogger().warn("Can't find buildNumber in buildNumber.properties");
         }
         return null;
@@ -113,7 +114,7 @@ public class VersionUtils {
         try (ResponseBody body = response.body()) {
             return body.string();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             return "{}";
         }
     }
@@ -123,21 +124,22 @@ public class VersionUtils {
 
         if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return;
 
+        API.getExecutorService().submit(() -> {
 
-        LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
+            LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
-        try {
-            LogManager.getLogger().info("Deleting the old plugin version...");
-            long deletingTime = AutoUpdater.deleteOldVersion();
-            LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
-            LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
-            long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
-            LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
-            latestUpdatedVersion = latestRelease;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            try {
+                LogManager.getLogger().info("Deleting the old plugin version...");
+                long deletingTime = AutoUpdater.deleteOldVersion();
+                LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
+                LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
+                long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
+                LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
+                latestUpdatedVersion = latestRelease;
+            } catch (IOException ex) {
+                LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
+            }
+        });
     }
 
     private static int compareVersions(String currentVersion, String lastestVersion) {
@@ -182,7 +184,7 @@ public class VersionUtils {
                     JarEntry entry = jar.getJarEntry("plugin.yml");
 
                     if (entry == null) {
-                        throw new RuntimeException();
+                        continue;
                     }
 
                     try (InputStream in = jar.getInputStream(entry)) {
@@ -195,7 +197,7 @@ public class VersionUtils {
                         }
                     }
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    LogManager.getLogger().error(ex.getMessage(), ex);
                 }
             }
             return Integer.MIN_VALUE;
