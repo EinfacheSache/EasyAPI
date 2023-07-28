@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.Future;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -64,11 +65,15 @@ public class VersionUtils {
         return null;
     }
 
+    public static void main(String[] args) {
+        checkVersion("Neoprotect", "NeoPlugin", "v1.2.1-Beta", UpdateSetting.DISABLED).message();
+    }
+
     private static String latestUpdatedVersion = null;
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
 
-        Result result = new Result(VersionStatus.LATEST, null, null, null);
+        Result result = new Result(VersionStatus.LATEST, "ERROR", "ERROR1", "NOT FOUND");
 
         try {
 
@@ -93,9 +98,9 @@ public class VersionUtils {
 
                 case 1: {
                     if (autoUpdate.equals(UpdateSetting.ENABLED)) {
-                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
-                    }else
-                        result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl);
+                        latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
+                    }
+                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl);
                     break;
                 }
 
@@ -106,9 +111,9 @@ public class VersionUtils {
 
                 case -1: {
                     if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
-                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
-                    }else
-                        result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl);
+                        latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
+                    }
+                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl);
                 }
             }
 
@@ -132,11 +137,10 @@ public class VersionUtils {
     }
 
 
-    public static void updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
+    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
+        return API.getExecutorService().submit(() -> {
 
-        if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return;
-
-        API.getExecutorService().submit(() -> {
+            if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return latestRelease;
 
             LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
@@ -148,9 +152,11 @@ public class VersionUtils {
                 long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
                 LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
                 latestUpdatedVersion = latestRelease;
+                return latestRelease;
             } catch (IOException ex) {
                 LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             }
+            return null;
         });
     }
 
