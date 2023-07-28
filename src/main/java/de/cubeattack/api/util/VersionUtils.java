@@ -68,6 +68,9 @@ public class VersionUtils {
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, UpdateSetting autoUpdate) {
 
+        if(latestUpdatedVersion != null)
+            currentVersion = latestUpdatedVersion;
+
         RestAPIUtils restAPIUtils = new RestAPIUtils();
         String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
 
