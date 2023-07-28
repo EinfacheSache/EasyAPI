@@ -66,20 +66,20 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String currentVersion, UpdateSetting autoUpdate) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
 
-        if(latestUpdatedVersion != null)
-            currentVersion = latestUpdatedVersion;
-
-        RestAPIUtils restAPIUtils = new RestAPIUtils();
-        String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
+        Result result = new Result(VersionStatus.LATEST, null, null, null);
 
         try {
+
+            String fileVersion = (latestUpdatedVersion == null ? pluginVersion : latestUpdatedVersion);
+            RestAPIUtils restAPIUtils = new RestAPIUtils();
+            String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
             Response response = restAPIUtils.request("GET", url, null);
 
             if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
                 LogManager.getLogger().warn("Version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
-                return new Result(VersionStatus.LATEST, null, null, null);
+                return result;
             }
 
             JSONObject jsonResponse = new JSONObject(getBody(response));
@@ -87,30 +87,39 @@ public class VersionUtils {
             String latestVersion = jsonResponse.getString("tag_name");
             String releaseUrl = jsonResponse.getString("html_url");
 
-            int compareResult = compareVersions((currentVersion.contains(":") ? currentVersion.split(":")[0] : currentVersion), latestVersion);
+            int compareResult = compareVersions((fileVersion.contains(":") ? fileVersion.split(":")[0] : fileVersion), latestVersion);
 
-            if (compareResult > 0) {
-                long start = System.currentTimeMillis();
-                if (autoUpdate.equals(UpdateSetting.ENABLED)) {
-                    updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
-                    return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
+            switch (compareResult){
+
+                case 1: {
+                    if (autoUpdate.equals(UpdateSetting.ENABLED)) {
+                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
+                    }else
+                        result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl);
+                    break;
                 }
-                return new Result(VersionStatus.DEVELOPMENT, currentVersion, latestVersion, releaseUrl);
-            } else if (compareResult == 0) {
-                return new Result(VersionStatus.LATEST, currentVersion, latestVersion, releaseUrl);
-            } else {
-                long start = System.currentTimeMillis();
-                if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
-                    updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
-                    return new Result(VersionStatus.REQUIRED_RESTART, currentVersion, latestVersion, releaseUrl);
+
+                case 0: {
+                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, releaseUrl);
+                    break;
                 }
-                return new Result(VersionStatus.OUTDATED, currentVersion, latestVersion, releaseUrl);
+
+                case -1: {
+                    if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
+                        updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion);
+                    }else
+                        result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl);
+                }
             }
+
+            if(latestUpdatedVersion != null)
+                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl);
 
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
         }
-        return new Result(VersionStatus.LATEST, null, null, null);
+
+        return result;
     }
 
     private static String getBody(Response response) {
