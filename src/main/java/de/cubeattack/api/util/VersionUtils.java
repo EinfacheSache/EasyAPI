@@ -80,6 +80,8 @@ public class VersionUtils {
 
             if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
                 LogManager.getLogger().warn("Version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
+                if (response != null && response.body() != null)
+                    response.body().close();
                 return result;
             }
 
@@ -90,7 +92,7 @@ public class VersionUtils {
 
             int compareResult = compareVersions((fileVersion.contains(":") ? fileVersion.split(":")[0] : fileVersion), latestVersion);
 
-            switch (compareResult){
+            switch (compareResult) {
 
                 case 1: {
                     if (autoUpdate.equals(UpdateSetting.ENABLED)) {
@@ -113,7 +115,7 @@ public class VersionUtils {
                 }
             }
 
-            if(latestUpdatedVersion != null)
+            if (latestUpdatedVersion != null)
                 result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl);
 
         } catch (Exception e) {
@@ -276,6 +278,7 @@ public class VersionUtils {
         DEV,
         ENABLED,
         DISABLED;
+
         public static UpdateSetting getByNameOrDefault(String value) {
             for (UpdateSetting setting : UpdateSetting.values()) {
                 if (setting.name().equalsIgnoreCase(value)) {
