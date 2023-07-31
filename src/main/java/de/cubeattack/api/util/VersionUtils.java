@@ -65,15 +65,11 @@ public class VersionUtils {
         return null;
     }
 
-    public static void main(String[] args) {
-        checkVersion("Neoprotect", "NeoPlugin", "v1.2.1-Beta", UpdateSetting.DISABLED).message();
-    }
-
     private static String latestUpdatedVersion = null;
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
 
-        Result result = new Result(VersionStatus.LATEST, "ERROR", "ERROR1", "NOT FOUND");
+        Result result = new Result(VersionStatus.LATEST, "ERROR", "ERROR", "NOT FOUND");
 
         try {
 
