@@ -41,17 +41,17 @@ public class Localization {
         try {
             tempLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
         }catch (MalformedURLException ex){
-            ex.printStackTrace();
+            LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             tempLoader = Localization.class.getClassLoader();
         }
         this.loader = tempLoader;
     }
 
     public String get(String key, Object... format) {
-        return get(key, this.defaultLocale, format);
+        return get(this.defaultLocale, key, format);
     }
 
-    public String get(String key, Locale locale, Object... format) {
+    public String get(Locale locale, String key, Object... format) {
         try {
             ResourceBundle bundle = getResourceBundle(locale);
             if (!bundle.containsKey(key)) {
@@ -66,7 +66,7 @@ public class Localization {
             }
             return format.length == 0 ? bundle.getString(key) : MessageFormat.format(bundle.getString(key), format);
         } catch (MissingResourceException ex) {
-            ex.printStackTrace();
+            LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             return key;
         }
     }
