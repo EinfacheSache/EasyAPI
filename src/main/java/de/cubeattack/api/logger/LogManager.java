@@ -49,8 +49,8 @@ public class LogManager
     public void info(String output){
         if(logger instanceof Logger){
             ((Logger) logger).log(java.util.logging.Level.INFO, output);
-        }else
-            if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).info(output);
+        }
+        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).info(output);
     }
     public void warn(String output){
         if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).warn(output);
