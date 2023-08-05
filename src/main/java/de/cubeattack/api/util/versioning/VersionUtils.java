@@ -1,10 +1,10 @@
-package de.cubeattack.api.util;
+package de.cubeattack.api.util.versioning;
 
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
-import org.apache.maven.artifact.versioning.ComparableVersion;
+import de.cubeattack.api.util.RestAPIUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
