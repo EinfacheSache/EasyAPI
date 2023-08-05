@@ -1,11 +1,12 @@
 package de.cubeattack.api.logger;
 
 import de.cubeattack.api.util.JavaUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+
 
 @SuppressWarnings("unused")
 public class LogManager
@@ -47,8 +48,8 @@ public class LogManager
     }
 
     public void info(String output){
-        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).info(output);
-        if(logger instanceof Logger){((Logger) logger).log(java.util.logging.Level.INFO, output);
+        if(logger instanceof Logger) ((Logger) logger).info(output);
+        if(logger instanceof java.util.logging.Logger){((java.util.logging.Logger) logger).log(java.util.logging.Level.INFO, output);
         }
     }
     public void warn(String output){
