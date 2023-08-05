@@ -9,13 +9,12 @@ import java.util.logging.LogRecord;
 
 
 @SuppressWarnings("unused")
-public class LogManager
-{
+public class LogManager {
 
     static {
-        if(JavaUtils.javaVersionCheck() < 11){
+        if (JavaUtils.javaVersionCheck() < 11) {
             System.setProperty("logback.configurationFile", "src/main/resources/logback-8.xml");
-        }else {
+        } else {
             System.setProperty("logback.configurationFile", "src/main/resources/logback-17.xml");
         }
     }
@@ -28,41 +27,54 @@ public class LogManager
         this.logger = logger;
         return this;
     }
+
     public LogManager setLevel(Object level) {
         return setLevel(level, logger);
     }
 
     public LogManager setLevel(Object level, Object logger) {
-        if(logger instanceof ch.qos.logback.classic.Logger && level instanceof ch.qos.logback.classic.Level) ((ch.qos.logback.classic.Logger) logger).setLevel((ch.qos.logback.classic.Level) level);
-        if(logger instanceof java.util.logging.Logger && level instanceof java.util.logging.Level) ((java.util.logging.Logger) logger).setLevel((java.util.logging.Level) level);
+        if (logger instanceof ch.qos.logback.classic.Logger && level instanceof ch.qos.logback.classic.Level)
+            ((ch.qos.logback.classic.Logger) logger).setLevel((ch.qos.logback.classic.Level) level);
+        if (logger instanceof java.util.logging.Logger && level instanceof java.util.logging.Level)
+            ((java.util.logging.Logger) logger).setLevel((java.util.logging.Level) level);
         return this;
     }
 
-    public void trace(String output){
-        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).trace(output);
-        if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.FINE, output);
-    }
-    public void debug(String output){
-        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).debug(output);
-        if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.CONFIG, output);
+    public void trace(String output) {
+        if (logger instanceof Logger) ((Logger) logger).trace(output);
+        if (logger instanceof java.util.logging.Logger)
+            ((java.util.logging.Logger) logger).log(java.util.logging.Level.FINE, output);
     }
 
-    public void info(String output){
-        if(logger instanceof Logger) ((Logger) logger).info(output);
-        if(logger instanceof java.util.logging.Logger){((java.util.logging.Logger) logger).log(java.util.logging.Level.INFO, output);
-        }
+    public void debug(String output) {
+        if (logger instanceof Logger) ((Logger) logger).debug(output);
+        if (logger instanceof java.util.logging.Logger)
+            ((java.util.logging.Logger) logger).log(java.util.logging.Level.CONFIG, output);
     }
-    public void warn(String output){
-        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).warn(output);
-        if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.WARNING, output);
+
+    public void info(String output) {
+        if (logger instanceof Logger) ((Logger) logger).info(output);
+        if (logger instanceof java.util.logging.Logger)
+            ((java.util.logging.Logger) logger).log(java.util.logging.Level.INFO, output);
+
     }
-    public void error(String output){
-        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).error(output);
-        if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.SEVERE, output);
+
+    public void warn(String output) {
+        if (logger instanceof Logger) ((Logger) logger).warn(output);
+        if (logger instanceof java.util.logging.Logger)
+            ((java.util.logging.Logger) logger).log(java.util.logging.Level.WARNING, output);
     }
-    public void error(String output, Throwable throwable){
-        if(logger instanceof org.slf4j.Logger) ((org.slf4j.Logger) logger).error(output, throwable);
-        if(logger instanceof java.util.logging.Logger) ((java.util.logging.Logger) logger).log(java.util.logging.Level.SEVERE, output, throwable);
+
+    public void error(String output) {
+        if (logger instanceof Logger) ((Logger) logger).error(output);
+        if (logger instanceof java.util.logging.Logger)
+            ((java.util.logging.Logger) logger).log(java.util.logging.Level.SEVERE, output);
+    }
+
+    public void error(String output, Throwable throwable) {
+        if (logger instanceof Logger) ((Logger) logger).error(output, throwable);
+        if (logger instanceof java.util.logging.Logger)
+            ((java.util.logging.Logger) logger).log(java.util.logging.Level.SEVERE, output, throwable);
     }
 
     public void loggerTransfer() {
@@ -82,15 +94,17 @@ public class LogManager
                     level = ch.qos.logback.classic.Level.DEBUG;
                 }
 
-                if(!(logger instanceof ch.qos.logback.classic.Logger))return;
-                ((ch.qos.logback.classic.Logger)logger).log(null, ch.qos.logback.classic.Logger.FQCN, level.toInt()/1000, record.getMessage(), null, record.getThrown());
+                if (!(logger instanceof ch.qos.logback.classic.Logger)) return;
+                ((ch.qos.logback.classic.Logger) logger).log(null, ch.qos.logback.classic.Logger.FQCN, level.toInt() / 1000, record.getMessage(), null, record.getThrown());
             }
 
             @Override
-            public void flush() {}
+            public void flush() {
+            }
 
             @Override
-            public void close() throws SecurityException {}
+            public void close() throws SecurityException {
+            }
         };
 
         for (Handler existingHandler : javaLogger.getHandlers()) {
