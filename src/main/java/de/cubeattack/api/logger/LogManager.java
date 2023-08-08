@@ -4,6 +4,7 @@ import de.cubeattack.api.util.JavaUtils;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 
 @SuppressWarnings("unused")
@@ -18,7 +19,7 @@ public class LogManager {
     }
 
     private static final LogManager logManager = new LogManager();
-    public Object logger = org.slf4j.LoggerFactory.getLogger("de.cubeattack");
+    public Object logger = Logger.getLogger("de.cubeattack");
 
     public LogManager setLogger(Object logger) {
         this.logger = logger;
