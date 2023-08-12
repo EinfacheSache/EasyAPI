@@ -69,7 +69,7 @@ public class VersionUtils {
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
 
-        Result result = new Result(VersionStatus.LATEST, "ERROR", "ERROR", "NOT FOUND");
+        Result result = new Result(VersionStatus.FAILED, "ERROR", "ERROR", "NOT FOUND");
 
         try {
 
@@ -268,6 +268,7 @@ public class VersionUtils {
     }
 
     public enum VersionStatus {
+        FAILED,
         LATEST,
         OUTDATED,
         DEVELOPMENT,
