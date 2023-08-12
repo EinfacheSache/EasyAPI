@@ -79,7 +79,7 @@ public class VersionUtils {
             Response response = restAPIUtils.request("GET", url, null);
 
             if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
-                LogManager.getLogger().warn("Version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
+                LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
                 if (response != null && response.body() != null)
                     response.body().close();
                 return result;
