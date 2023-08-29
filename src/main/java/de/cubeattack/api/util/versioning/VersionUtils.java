@@ -69,7 +69,7 @@ public class VersionUtils {
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
 
-        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", null);
+        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
         try {
 
@@ -98,12 +98,12 @@ public class VersionUtils {
                     if (autoUpdate.equals(UpdateSetting.ENABLED)) {
                         latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
                     }
-                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, null);
+                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, "");
                     break;
                 }
 
                 case 0: {
-                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, releaseUrl, null);
+                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, releaseUrl, "");
                     break;
                 }
 
@@ -111,12 +111,12 @@ public class VersionUtils {
                     if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
                         latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
                     }
-                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, null);
+                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, "");
                 }
             }
 
             if (latestUpdatedVersion != null)
-                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl, null);
+                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl, "");
 
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
