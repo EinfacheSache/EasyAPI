@@ -69,7 +69,7 @@ public class VersionUtils {
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
 
-        Result result = new Result(VersionStatus.FAILED, "ERROR", "ERROR", "NOT FOUND");
+        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", null);
 
         try {
 
@@ -82,7 +82,7 @@ public class VersionUtils {
                 LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
                 if (response != null && response.body() != null)
                     response.body().close();
-                return result;
+                return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "NOT FOUND", String.valueOf(response));
             }
 
             JSONObject jsonResponse = new JSONObject(getBody(response));
@@ -98,12 +98,12 @@ public class VersionUtils {
                     if (autoUpdate.equals(UpdateSetting.ENABLED)) {
                         latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
                     }
-                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl);
+                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, null);
                     break;
                 }
 
                 case 0: {
-                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, releaseUrl);
+                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, releaseUrl, null);
                     break;
                 }
 
@@ -111,15 +111,16 @@ public class VersionUtils {
                     if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
                         latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
                     }
-                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl);
+                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, null);
                 }
             }
 
             if (latestUpdatedVersion != null)
-                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl);
+                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl, null);
 
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
+            result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", e.getMessage());
         }
 
         return result;
@@ -225,12 +226,14 @@ public class VersionUtils {
         private final String currentVersion;
         private final String latestVersion;
         private final String releaseUrl;
+        private final String error;
 
-        public Result(VersionStatus versionStatus, String currentVersion, String latestVersion, String releaseUrl) {
+        public Result(VersionStatus versionStatus, String currentVersion, String latestVersion, String releaseUrl, String error) {
             this.versionStatus = versionStatus;
             this.currentVersion = currentVersion;
             this.latestVersion = latestVersion;
             this.releaseUrl = releaseUrl;
+            this.error = error;
         }
 
         public Result message() {
@@ -264,6 +267,10 @@ public class VersionUtils {
 
         public String getReleaseUrl() {
             return releaseUrl;
+        }
+
+        public String getError() {
+            return error;
         }
     }
 
