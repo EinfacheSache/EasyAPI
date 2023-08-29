@@ -1,9 +1,6 @@
 package de.cubeattack.api.util;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import com.squareup.okhttp.*;
 import de.cubeattack.api.logger.LogManager;
 
 import java.net.SocketException;
@@ -15,7 +12,7 @@ public class RestAPIUtils {
     private final OkHttpClient client = new OkHttpClient();
 
     {
-        client.setConnectTimeout(5, TimeUnit.SECONDS);
+        client.setConnectTimeout(3, TimeUnit.SECONDS);
     }
 
 
@@ -34,6 +31,7 @@ public class RestAPIUtils {
             return client.newCall(request).execute();
         }catch (UnknownHostException | SocketTimeoutException | SocketException connectionException){
             LogManager.getLogger().error( request + " failed cause (" + connectionException + ")");
+            return new Response.Builder().request(request).protocol(Protocol.HTTP_2).code(500).message(connectionException.getMessage()).build();
         } catch (Exception exception){
             exception.printStackTrace();
         }
