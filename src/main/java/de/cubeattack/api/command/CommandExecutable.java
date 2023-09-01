@@ -1,7 +1,7 @@
 package de.cubeattack.api.command;
 
 @FunctionalInterface
-public interface Executable
+public interface CommandExecutable
 {
     void run(String[] args);
 }

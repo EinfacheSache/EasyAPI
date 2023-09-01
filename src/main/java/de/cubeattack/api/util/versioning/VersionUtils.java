@@ -68,7 +68,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate, int delay) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate, int delay, CallbackExecutable callback) {
 
         Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
@@ -96,11 +96,11 @@ public class VersionUtils {
             switch (compareResult) {
 
                 case 1: {
+                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, "");
                     if (autoUpdate.equals(UpdateSetting.ENABLED)) {
-                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, delay));
+                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", result, delay, callback));
                         latestUpdatedVersion = delay == 0 ? future.get() : null;
                     }
-                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, "");
                     break;
                 }
 
@@ -110,11 +110,11 @@ public class VersionUtils {
                 }
 
                 case -1: {
+                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, "");
                     if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
-                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, delay));
+                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", result, delay, callback));
                         latestUpdatedVersion = delay == 0 ? future.get() : null;
                     }
-                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, "");
                 }
             }
 
@@ -139,10 +139,10 @@ public class VersionUtils {
     }
 
 
-    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease, int delay) {
+    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, Result result, int delay, CallbackExecutable callback) {
         return API.getExecutorService().schedule(() -> {
 
-            if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return latestRelease;
+            if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return result.latestVersion;
 
             LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
@@ -150,11 +150,15 @@ public class VersionUtils {
                 LogManager.getLogger().info("Deleting the old plugin version...");
                 long deletingTime = AutoUpdater.deleteOldVersion();
                 LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
-                LogManager.getLogger().info("Download the latest release " + latestRelease + "...");
+                LogManager.getLogger().info("Download the latest release " + result.latestVersion + "...");
                 long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
                 LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
-                latestUpdatedVersion = latestRelease;
-                return latestRelease;
+                latestUpdatedVersion = result.latestVersion;
+
+                if(callback != null)
+                    callback.run(result.setVersionStatus(VersionStatus.REQUIRED_RESTART));
+
+                return result.latestVersion;
             } catch (IOException ex) {
                 LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             }
@@ -225,7 +229,7 @@ public class VersionUtils {
     }
 
     public static class Result {
-        private final VersionStatus versionStatus;
+        private VersionStatus versionStatus;
         private final String currentVersion;
         private final String latestVersion;
         private final String releaseUrl;
@@ -253,6 +257,11 @@ public class VersionUtils {
                 LogManager.getLogger().warn("Latest version: " + latestVersion);
                 LogManager.getLogger().warn("Release URL: " + releaseUrl);
             }
+            return this;
+        }
+
+        public Result setVersionStatus(VersionStatus versionStatus) {
+            this.versionStatus = versionStatus;
             return this;
         }
 

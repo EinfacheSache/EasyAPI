@@ -5,11 +5,11 @@ import java.util.Arrays;
 class ConsoleCommand
 {
     private final String[] commands;
-    private final Executable executable;
+    private final CommandExecutable commandExecutable;
 
-    public ConsoleCommand(Executable executable, String... commands) {
+    public ConsoleCommand(CommandExecutable commandExecutable, String... commands) {
         this.commands = commands;
-        this.executable = executable;
+        this.commandExecutable = commandExecutable;
     }
 
     public boolean equalsCommand(String cmd) {
@@ -17,6 +17,6 @@ class ConsoleCommand
     }
 
     public void run(String[] args){
-        executable.run(args);
+        commandExecutable.run(args);
     }
 }

@@ -4,7 +4,8 @@ import de.cubeattack.api.logger.LogManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class ConsoleListener
@@ -17,7 +18,7 @@ public class ConsoleListener
 
     private final List<ConsoleCommand> commands = new ArrayList<>();
 
-    public ConsoleListener registerCommand(Executable runnable, String... cmd ) {
+    public ConsoleListener registerCommand(CommandExecutable runnable, String... cmd ) {
         commands.add(new ConsoleCommand(runnable, cmd));
         return this;
     }
