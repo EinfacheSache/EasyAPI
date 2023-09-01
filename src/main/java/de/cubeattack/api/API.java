@@ -1,13 +1,13 @@
 package de.cubeattack.api;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class API {
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-    public static ExecutorService getExecutorService() {
+    public static ScheduledExecutorService getExecutorService() {
         return executorService;
     }
 }

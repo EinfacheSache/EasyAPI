@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -137,7 +138,7 @@ public class VersionUtils {
 
 
     public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
-        return API.getExecutorService().submit(() -> {
+        return API.getExecutorService().schedule(() -> {
 
             if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return latestRelease;
 
@@ -156,7 +157,7 @@ public class VersionUtils {
                 LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             }
             return null;
-        });
+        }, 10, TimeUnit.SECONDS);
     }
 
     private static int compareVersions(String currentVersion, String lastestVersion) {
