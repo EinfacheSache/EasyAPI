@@ -68,7 +68,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate, int delay) {
 
         Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
@@ -97,7 +97,8 @@ public class VersionUtils {
 
                 case 1: {
                     if (autoUpdate.equals(UpdateSetting.ENABLED)) {
-                        latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
+                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, delay));
+                        latestUpdatedVersion = delay == 0 ? future.get() : null;
                     }
                     result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, "");
                     break;
@@ -110,7 +111,8 @@ public class VersionUtils {
 
                 case -1: {
                     if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
-                        latestUpdatedVersion = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion)).get();
+                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", latestVersion, delay));
+                        latestUpdatedVersion = delay == 0 ? future.get() : null;
                     }
                     result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, "");
                 }
@@ -137,7 +139,7 @@ public class VersionUtils {
     }
 
 
-    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease) {
+    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, String latestRelease, int delay) {
         return API.getExecutorService().schedule(() -> {
 
             if (latestRelease.equalsIgnoreCase(latestUpdatedVersion)) return latestRelease;
@@ -157,7 +159,7 @@ public class VersionUtils {
                 LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             }
             return null;
-        }, 10, TimeUnit.SECONDS);
+        }, delay, TimeUnit.SECONDS);
     }
 
     private static int compareVersions(String currentVersion, String lastestVersion) {
