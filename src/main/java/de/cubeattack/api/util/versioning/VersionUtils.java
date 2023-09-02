@@ -68,7 +68,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting, int delay, CallbackExecutable callback) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting) {
 
         Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
@@ -97,8 +97,8 @@ public class VersionUtils {
 
                 case 1: {
                     result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
-                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, delay, callback));
-                    latestUpdatedVersion = delay == 0 ? future.get() : null;
+                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, 0, null));
+                    latestUpdatedVersion = future.get();
                     break;
                 }
 
@@ -109,8 +109,8 @@ public class VersionUtils {
 
                 case -1: {
                     result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
-                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, delay, callback));
-                    latestUpdatedVersion = delay == 0 ? future.get() : null;
+                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, 0, null));
+                    latestUpdatedVersion = future.get();
                 }
             }
 
