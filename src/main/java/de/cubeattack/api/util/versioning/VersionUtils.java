@@ -68,7 +68,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting autoUpdate, int delay, CallbackExecutable callback) {
+    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting, int delay, CallbackExecutable callback) {
 
         Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
@@ -97,10 +97,8 @@ public class VersionUtils {
 
                 case 1: {
                     result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, "");
-                    if (autoUpdate.equals(UpdateSetting.ENABLED)) {
-                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", result, delay, callback));
-                        latestUpdatedVersion = delay == 0 ? future.get() : null;
-                    }
+                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, delay, callback));
+                    latestUpdatedVersion = delay == 0 ? future.get() : null;
                     break;
                 }
 
@@ -111,10 +109,8 @@ public class VersionUtils {
 
                 case -1: {
                     result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, "");
-                    if (!autoUpdate.equals(UpdateSetting.DISABLED)) {
-                        Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(downloadURL, "./plugins/NeoProtect-" + latestVersion + ".jar", result, delay, callback));
-                        latestUpdatedVersion = delay == 0 ? future.get() : null;
-                    }
+                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, delay, callback));
+                    latestUpdatedVersion = delay == 0 ? future.get() : null;
                 }
             }
 
@@ -139,10 +135,21 @@ public class VersionUtils {
     }
 
 
-    public static Future<String> updateToLatestVersion(String downloadURL, String savePath, Result result, int delay, CallbackExecutable callback) {
+    public static Future<String> updateToLatestVersion(Result result, UpdateSetting updateSetting, int delay, CallbackExecutable callback) {
+
+        String savePath = "./plugins/NeoProtect-" + result.latestVersion + ".jar";
+
         return API.getExecutorService().schedule(() -> {
 
             if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return result.latestVersion;
+
+            if (result.versionStatus == VersionStatus.DEVELOPMENT && !updateSetting.equals(UpdateSetting.ENABLED)){
+                return latestUpdatedVersion;
+            }
+
+            if (result.versionStatus == VersionStatus.OUTDATED && updateSetting.equals(UpdateSetting.DISABLED)){
+                return latestUpdatedVersion;
+            }
 
             LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
 
@@ -151,7 +158,7 @@ public class VersionUtils {
                 long deletingTime = AutoUpdater.deleteOldVersion();
                 LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
                 LogManager.getLogger().info("Download the latest release " + result.latestVersion + "...");
-                long updateTime = AutoUpdater.downloadFile(downloadURL, savePath);
+                long updateTime = AutoUpdater.downloadFile(result.getReleaseUrl(), savePath);
                 LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
                 latestUpdatedVersion = result.latestVersion;
 
@@ -175,7 +182,7 @@ public class VersionUtils {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static class AutoUpdater {
 
-        public static long downloadFile(String downloadURL, String fileName) throws IOException {
+        private static long downloadFile(String downloadURL, String fileName) throws IOException {
             long startTime = System.currentTimeMillis();
             File file = new File(fileName);
             URL url = new URL(downloadURL);
@@ -195,7 +202,7 @@ public class VersionUtils {
             }
         }
 
-        public static long deleteOldVersion() {
+        private static long deleteOldVersion() {
             long startTime = System.currentTimeMillis();
 
             for (File file : Objects.requireNonNull(new File("./plugins/").listFiles())) {
