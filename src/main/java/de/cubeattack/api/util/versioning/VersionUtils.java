@@ -70,7 +70,7 @@ public class VersionUtils {
 
     public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting, int delay, CallbackExecutable callback) {
 
-        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
+        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
         try {
 
@@ -83,7 +83,7 @@ public class VersionUtils {
                 LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
                 if (response != null && response.body() != null)
                     response.body().close();
-                return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "NOT FOUND", String.valueOf(response));
+                return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "ERROR", "NOT FOUND", String.valueOf(response));
             }
 
             JSONObject jsonResponse = new JSONObject(getBody(response));
@@ -96,30 +96,30 @@ public class VersionUtils {
             switch (compareResult) {
 
                 case 1: {
-                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, releaseUrl, "");
+                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
                     Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, delay, callback));
                     latestUpdatedVersion = delay == 0 ? future.get() : null;
                     break;
                 }
 
                 case 0: {
-                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, releaseUrl, "");
+                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
                     break;
                 }
 
                 case -1: {
-                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, releaseUrl, "");
+                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
                     Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, delay, callback));
                     latestUpdatedVersion = delay == 0 ? future.get() : null;
                 }
             }
 
             if (latestUpdatedVersion != null)
-                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, releaseUrl, "");
+                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
 
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
-            result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "NOT FOUND", e.getMessage());
+            result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", e.getMessage());
         }
 
         return result;
@@ -143,11 +143,11 @@ public class VersionUtils {
 
             if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return result.latestVersion;
 
-            if (result.versionStatus == VersionStatus.DEVELOPMENT && !updateSetting.equals(UpdateSetting.ENABLED)){
+            if (result.versionStatus == VersionStatus.DEVELOPMENT && !updateSetting.equals(UpdateSetting.ENABLED)) {
                 return latestUpdatedVersion;
             }
 
-            if (result.versionStatus == VersionStatus.OUTDATED && updateSetting.equals(UpdateSetting.DISABLED)){
+            if (result.versionStatus == VersionStatus.OUTDATED && updateSetting.equals(UpdateSetting.DISABLED)) {
                 return latestUpdatedVersion;
             }
 
@@ -158,11 +158,11 @@ public class VersionUtils {
                 long deletingTime = AutoUpdater.deleteOldVersion();
                 LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
                 LogManager.getLogger().info("Download the latest release " + result.latestVersion + "...");
-                long updateTime = AutoUpdater.downloadFile(result.getReleaseUrl(), savePath);
+                long updateTime = AutoUpdater.downloadFile(result.getDownloadUrl(), savePath);
                 LogManager.getLogger().info("Update finished! (took " + updateTime + "ms)");
                 latestUpdatedVersion = result.latestVersion;
 
-                if(callback != null)
+                if (callback != null)
                     callback.run(result.setVersionStatus(VersionStatus.REQUIRED_RESTART));
 
                 return result.latestVersion;
@@ -239,13 +239,15 @@ public class VersionUtils {
         private VersionStatus versionStatus;
         private final String currentVersion;
         private final String latestVersion;
+        private final String downloadUrl;
         private final String releaseUrl;
         private final String error;
 
-        public Result(VersionStatus versionStatus, String currentVersion, String latestVersion, String releaseUrl, String error) {
+        public Result(VersionStatus versionStatus, String currentVersion, String latestVersion, String downloadUrl, String releaseUrl, String error) {
             this.versionStatus = versionStatus;
             this.currentVersion = currentVersion;
             this.latestVersion = latestVersion;
+            this.downloadUrl = downloadUrl;
             this.releaseUrl = releaseUrl;
             this.error = error;
         }
@@ -282,6 +284,10 @@ public class VersionUtils {
 
         public String getLatestVersion() {
             return latestVersion;
+        }
+
+        public String getDownloadUrl() {
+            return downloadUrl;
         }
 
         public String getReleaseUrl() {
