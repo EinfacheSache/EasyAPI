@@ -141,7 +141,11 @@ public class VersionUtils {
 
         return API.getExecutorService().schedule(() -> {
 
-            if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return result.latestVersion;
+            if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestUpdatedVersion;
+
+            if (result.versionStatus == VersionStatus.LATEST) {
+                return latestUpdatedVersion;
+            }
 
             if (result.versionStatus == VersionStatus.DEVELOPMENT && !updateSetting.equals(UpdateSetting.ENABLED)) {
                 return latestUpdatedVersion;
