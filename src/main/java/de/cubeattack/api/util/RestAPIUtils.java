@@ -12,7 +12,7 @@ public class RestAPIUtils {
     private final OkHttpClient client = new OkHttpClient();
 
     {
-        client.setConnectTimeout(3, TimeUnit.SECONDS);
+        client.setConnectTimeout(5, TimeUnit.SECONDS);
     }
 
 

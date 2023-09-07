@@ -143,7 +143,7 @@ public class VersionUtils {
 
             if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestUpdatedVersion;
 
-            if (result.versionStatus == VersionStatus.LATEST) {
+            if (result.versionStatus == VersionStatus.LATEST || result.versionStatus == VersionStatus.FAILED) {
                 return latestUpdatedVersion;
             }
 
@@ -188,11 +188,20 @@ public class VersionUtils {
 
         private static long downloadFile(String downloadURL, String fileName) throws IOException {
             long startTime = System.currentTimeMillis();
-            File file = new File(fileName);
-            URL url = new URL(downloadURL);
 
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
+            URL url;
+            File file;
+
+            try {
+                file = new File(fileName);
+                url = new URL(downloadURL);
+
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return -1;
             }
 
             try (InputStream in = url.openStream();
