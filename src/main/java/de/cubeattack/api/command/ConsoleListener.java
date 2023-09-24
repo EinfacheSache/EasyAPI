@@ -1,6 +1,5 @@
 package de.cubeattack.api.command;
 
-import de.cubeattack.api.API;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -13,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class ConsoleListener
-{
+public class ConsoleListener {
 
     {
         run();
@@ -27,56 +25,56 @@ public class ConsoleListener
 
     private final List<ConsoleCommand> commands = new ArrayList<>();
 
-    public ConsoleListener registerCommand(CommandExecutable runnable, String... cmd ) {
+    public ConsoleListener registerCommand(CommandExecutable runnable, String... cmd) {
         commands.add(new ConsoleCommand(runnable, cmd));
         return this;
     }
 
     private void run() {
-        API.getExecutorService().submit(() -> {
-                    try {
-                        System.out.println("trying to start terminal");
 
-                        // Erstelle ein Terminal
-                        Terminal terminal = TerminalBuilder.builder()
-                                .system(true)
-                                .build();
+        try {
+            System.out.println("trying to start terminal");
 
-                        // Erstelle einen LineReader für die Eingabe
-                        LineReader reader = LineReaderBuilder.builder()
-                                .terminal(terminal)
-                                .build();
+            // Erstelle ein Terminal
+            Terminal terminal = TerminalBuilder.builder()
+                    .system(true)
+                    .build();
 
-                        // Schleife zum Lesen von Eingaben
-                        String prompt = "> ";
+            // Erstelle einen LineReader für die Eingabe
+            LineReader reader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .build();
 
-                        System.out.println("Started Terminal finished askopdiojasoijdoijasx");
-                        while (true) {
-                            String line;
-                            try {
-                                line = reader.readLine();
-                            } catch (UserInterruptException e) {
-                                // Benutzer hat Strg+C gedrückt
-                                continue;
-                            } catch (EndOfFileException e) {
-                                // Benutzer hat Strg+D gedrückt oder die Eingabe wurde beendet
-                                break;
-                            }
-                            if (line.equalsIgnoreCase("Hallo")) {
-                                System.out.println("Hey wie geht es dir?");
-                                continue;
-                            }
+            // Schleife zum Lesen von Eingaben
+            String prompt = "> ";
 
-                            // Hier kannst du die eingegebene Zeile verarbeiten
-                            System.out.println("Eingabe: " + line);
-                        }
+            System.out.println("Started Terminal finished askopdiojasoijdoijasx");
+            while (true) {
+                String line;
+                try {
+                    line = reader.readLine();
+                } catch (UserInterruptException e) {
+                    // Benutzer hat Strg+C gedrückt
+                    continue;
+                } catch (EndOfFileException e) {
+                    // Benutzer hat Strg+D gedrückt oder die Eingabe wurde beendet
+                    break;
+                }
+                if (line.equalsIgnoreCase("Hallo")) {
+                    System.out.println("Hey wie geht es dir?");
+                    continue;
+                }
 
-                        // Beende das Terminal
-                        //terminal.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+                // Hier kannst du die eingegebene Zeile verarbeiten
+                System.out.println("Eingabe: " + line);
+            }
+
+            // Beende das Terminal
+            //terminal.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         /*
         API.getExecutorService().submit(() -> {
