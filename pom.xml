@@ -78,6 +78,13 @@
             <scope>provided</scope>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>3.21.0</version> <!-- Aktuelle JLine-Version überprüfen -->
+        </dependency>
+
         <!-- Needed for Files -->
         <dependency>
             <groupId>org.json</groupId>
