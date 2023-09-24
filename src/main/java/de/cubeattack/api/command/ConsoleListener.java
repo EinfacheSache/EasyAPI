@@ -52,7 +52,7 @@ public class ConsoleListener {
             while (true) {
                 String line;
                 try {
-                    line = reader.readLine();
+                    line = reader.readLine(".");
                 } catch (UserInterruptException e) {
                     // Benutzer hat Strg+C gedrückt
                     continue;
