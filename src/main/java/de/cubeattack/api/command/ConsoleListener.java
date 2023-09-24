@@ -1,5 +1,6 @@
 package de.cubeattack.api.command;
 
+import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 
 import java.io.BufferedReader;
@@ -24,9 +25,10 @@ public class ConsoleListener
     }
 
     private void run() {
-        new Thread(() -> {
+        API.getExecutorService().submit(() -> {
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            //Scanner scanner = new Scanner(System.in);
             try {
                 while ((line = reader.readLine()) != null) {
                     String cmd = line.toLowerCase().split(" ")[0];
@@ -40,7 +42,7 @@ public class ConsoleListener
                     for (ConsoleCommand command : commands) {
                         if(command.equalsCommand(cmd)) {
                             command.run(args);
-                            System.out.print("\b\b/>");
+                            //System.out.print("\b\b/>");
                             break;
                         }
                     }
@@ -48,6 +50,6 @@ public class ConsoleListener
             } catch (Exception ex) {
                 LogManager.getLogger().error("Error whiles reading command : " + ex.getLocalizedMessage());
             }
-        }).start();
+        });
     }
 }

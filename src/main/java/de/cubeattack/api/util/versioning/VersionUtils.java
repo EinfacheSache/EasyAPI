@@ -83,7 +83,7 @@ public class VersionUtils {
                 LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
                 if (response != null && response.body() != null)
                     response.body().close();
-                return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "ERROR", "NOT FOUND", String.valueOf(response));
+                return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "ERROR", "NOT FOUND", String.valueOf(response == null ? "REQUEST FAILED (NULL)" : response));
             }
 
             JSONObject jsonResponse = new JSONObject(getBody(response));
@@ -119,7 +119,7 @@ public class VersionUtils {
 
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
-            result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", e.getMessage());
+            result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", e.getMessage() == null ? "NO ERROR MESSAGE PROVIDED" : e.getMessage());
         }
 
         return result;
