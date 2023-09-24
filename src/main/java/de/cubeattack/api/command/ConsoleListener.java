@@ -21,7 +21,7 @@ public class ConsoleListener
     }
 
     public static void main(String[] args) {
-        //new ConsoleListener().registerCommand(args1 -> System.out.println("Ausgabe"), "test");
+        new ConsoleListener().registerCommand(args1 -> System.out.println("Ausgabe"), "test");
         //new ConsoleListener().registerCommand(args1 -> System.out.println("test1"), "test");
     }
 
@@ -35,6 +35,8 @@ public class ConsoleListener
     private void run() {
         API.getExecutorService().submit(() -> {
                     try {
+                        System.out.println("trying to start terminal");
+
                         // Erstelle ein Terminal
                         Terminal terminal = TerminalBuilder.builder()
                                 .system(true)
@@ -47,10 +49,12 @@ public class ConsoleListener
 
                         // Schleife zum Lesen von Eingaben
                         String prompt = "> ";
+
+                        System.out.println("Started Terminal finished askopdiojasoijdoijasx");
                         while (true) {
                             String line;
                             try {
-                                line = reader.readLine(prompt);
+                                line = reader.readLine();
                             } catch (UserInterruptException e) {
                                 // Benutzer hat Strg+C gedrückt
                                 continue;
@@ -68,7 +72,7 @@ public class ConsoleListener
                         }
 
                         // Beende das Terminal
-                        terminal.close();
+                        //terminal.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
