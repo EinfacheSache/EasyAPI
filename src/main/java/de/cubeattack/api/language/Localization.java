@@ -78,6 +78,8 @@ public class Localization {
             return getDefaultResourceBundle();
         } catch (Exception ex) {
             LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
+            System.out.println("Sprache:" + locale);
+            System.out.println("DefaultSprache:" + this.defaultLocale);
             return getDefaultResourceBundle();
         }
     }

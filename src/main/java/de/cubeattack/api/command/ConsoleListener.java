@@ -1,13 +1,10 @@
 package de.cubeattack.api.command;
 
-import org.jline.reader.EndOfFileException;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.UserInterruptException;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
+import de.cubeattack.api.API;
+import de.cubeattack.api.logger.LogManager;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,52 +28,6 @@ public class ConsoleListener {
     }
 
     private void run() {
-
-        try {
-            System.out.println("trying to start terminal");
-
-            // Erstelle ein Terminal
-            Terminal terminal = TerminalBuilder.builder()
-                    .system(true)
-                    .build();
-
-            // Erstelle einen LineReader für die Eingabe
-            LineReader reader = LineReaderBuilder.builder()
-                    .terminal(terminal)
-                    .build();
-
-            // Schleife zum Lesen von Eingaben
-            String prompt = "> ";
-
-            System.out.println("Started Terminal finished askopdiojasoijdoijasx");
-            while (true) {
-                String line;
-                try {
-                    line = reader.readLine(".");
-                } catch (UserInterruptException e) {
-                    // Benutzer hat Strg+C gedrückt
-                    continue;
-                } catch (EndOfFileException e) {
-                    // Benutzer hat Strg+D gedrückt oder die Eingabe wurde beendet
-                    break;
-                }
-                if (line.equalsIgnoreCase("Hallo")) {
-                    System.out.println("Hey wie geht es dir?");
-                    continue;
-                }
-
-                // Hier kannst du die eingegebene Zeile verarbeiten
-                System.out.println("Eingabe: " + line);
-            }
-
-            // Beende das Terminal
-            //terminal.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        /*
         API.getExecutorService().submit(() -> {
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -103,6 +54,5 @@ public class ConsoleListener {
                 LogManager.getLogger().error("Error whiles reading command : " + ex.getLocalizedMessage());
             }
         });
-         */
     }
 }
