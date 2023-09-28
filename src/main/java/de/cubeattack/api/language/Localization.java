@@ -40,7 +40,7 @@ public class Localization {
         this.defaultLocale = defaultLocale;
         try {
             tempLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
-        }catch (MalformedURLException ex){
+        } catch (MalformedURLException ex) {
             LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             tempLoader = Localization.class.getClassLoader();
         }
@@ -76,6 +76,9 @@ public class Localization {
             return ResourceBundle.getBundle(this.resourceBundlePrefix, locale, this.loader, new UTF8Control());
         } catch (MissingResourceException ex) {
             return getDefaultResourceBundle();
+        } catch (Exception ex) {
+            LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
+            return getDefaultResourceBundle();
         }
     }
 
@@ -93,7 +96,8 @@ class UTF8Control extends ResourceBundle.Control {
             if (stream != null) {
                 return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return super.newBundle(baseName, locale, format, loader, reload);
     }
 }
