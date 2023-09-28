@@ -1,21 +1,12 @@
 package de.cubeattack.api.command;
 
-import org.jline.reader.EndOfFileException;
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.UserInterruptException;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
-
-import java.io.IOException;
-
 public class ConsoleReaderExample {
 
 
     public static void main(String[] args) {
 
         //new ConsoleListener().registerCommand(args1 -> System.out.println("Ausgabe"), "test");
-
+/*
         try {
             // Erstelle ein Terminal
             Terminal terminal = TerminalBuilder.builder()
@@ -54,5 +45,7 @@ public class ConsoleReaderExample {
         } catch (IOException e) {
             e.printStackTrace();
         }
+ */
     }
+
 }
