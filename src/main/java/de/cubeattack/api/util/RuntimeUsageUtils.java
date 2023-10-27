@@ -55,12 +55,13 @@ public class RuntimeUsageUtils {
                 if (line.startsWith("Mem:")) {
                     Pattern pattern = Pattern.compile("\\d+");
                     Matcher matcher = pattern.matcher(line);
-                    long usedMemory = 0;
-                    if (matcher.find()) {
-                        usedMemory = Long.parseLong(matcher.group());
+                    int count = 0;
+                    while (matcher.find()) {
+                        if (count == 1) {
+                            return Long.parseLong(matcher.group());
+                        }
+                        count++;
                     }
-                    System.out.println(usedMemory);
-                    return usedMemory;
                 }
             }
         } catch (IOException e) {
