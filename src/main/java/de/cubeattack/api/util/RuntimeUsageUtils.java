@@ -1,35 +1,46 @@
 package de.cubeattack.api.util;
 
+import com.sun.management.OperatingSystemMXBean;
+
 import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
+
 
 @SuppressWarnings("unused")
 public class RuntimeUsageUtils {
 
-    public static double getCpuUsage(){
-        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        if (threadBean.isThreadCpuTimeSupported() && threadBean.isThreadCpuTimeEnabled()) {
-            long[] threadIds = threadBean.getAllThreadIds();
-            double totalCpuLoad = 0;
+    private final static OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
-            for (long threadId : threadIds) {
-                totalCpuLoad += threadBean.getThreadCpuTime(threadId);
-            }
-
-            return totalCpuLoad / (threadIds.length * 1000000);
-        } else {
-            return -1;
-        }
+    public static int getCpuCores() {
+        return osMxBean.getAvailableProcessors();
     }
 
-    public static long getMaxRam(){
+    public static double getCpuUsage() {
+        return osMxBean.getProcessCpuLoad() * 100;
+    }
+
+
+    public static long getRuntimeMaxRam() {
         return Runtime.getRuntime().maxMemory() / (1024 * 1024);
     }
 
-    public static long getFreeRam(){
-        return (Runtime.getRuntime().maxMemory() / (1024 * 1024)) - getUsedRam();
+    public static long getRuntimeFreeRam() {
+        return (Runtime.getRuntime().maxMemory() / (1024 * 1024)) - getRuntimeUsedRam();
     }
-    public static long getUsedRam(){
+
+    public static long getRuntimeUsedRam() {
         return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
+    }
+
+
+    public static long getSystemMaxRam() {
+        return osMxBean.getTotalMemorySize() / (1024 * 1024 * 1024);
+    }
+
+    public static long getSystemFreeRam() {
+        return osMxBean.getFreeMemorySize() / (1024 * 1024 * 1024);
+    }
+
+    public static long getSystemUsedRam() {
+        return (osMxBean.getTotalMemorySize() / (1024 * 1024 * 1024)) - (osMxBean.getFreeMemorySize() / (1024 * 1024 * 1024));
     }
 }
