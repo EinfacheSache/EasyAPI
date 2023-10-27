@@ -65,7 +65,7 @@ public class RuntimeUsageUtils {
                 }
             }
         } catch (IOException e) {
-            return (getRuntimeMaxRam() - osMxBean.getFreeMemorySize()) / (1024 * 1024);
+            return getRuntimeMaxRam() - (osMxBean.getFreeMemorySize() / (1024 * 1024));
         }
         return Integer.MIN_VALUE;
     }
