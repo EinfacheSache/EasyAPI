@@ -10,6 +10,13 @@ public class RuntimeUsageUtils {
 
     private final static OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
+
+    public static void test() {
+        System.out.println(osMxBean.getCommittedVirtualMemorySize());
+        System.out.println(osMxBean.getFreePhysicalMemorySize());
+        System.out.println(osMxBean.getTotalPhysicalMemorySize());
+    }
+
     public static int getCpuCores() {
         return osMxBean.getAvailableProcessors();
     }
