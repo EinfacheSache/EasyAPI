@@ -2,6 +2,9 @@ package de.cubeattack.api.util;
 
 import com.sun.management.OperatingSystemMXBean;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 
 
@@ -10,12 +13,6 @@ public class RuntimeUsageUtils {
 
     private final static OperatingSystemMXBean osMxBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
-
-    public static void test() {
-        System.out.println(osMxBean.getCommittedVirtualMemorySize() / (1024 * 1024 * 1024));
-        System.out.println(osMxBean.getFreePhysicalMemorySize() / (1024 * 1024 * 1024));
-        System.out.println(osMxBean.getTotalPhysicalMemorySize() / (1024 * 1024 * 1024));
-    }
 
     public static int getCpuCores() {
         return osMxBean.getAvailableProcessors();
@@ -44,7 +41,19 @@ public class RuntimeUsageUtils {
     }
 
     public static long getSystemFreeRam() {
-        return osMxBean.getFreeMemorySize() / (1024 * 1024);
+        try {
+            Process process = Runtime.getRuntime().exec("free -h");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Mem:")) {
+                    return Long.parseLong(line);
+                }
+            }
+        } catch (IOException e) {
+            return osMxBean.getFreeMemorySize() / (1024 * 1024);
+        }
+        return Integer.MIN_VALUE;
     }
 
     public static long getSystemUsedRam() {
