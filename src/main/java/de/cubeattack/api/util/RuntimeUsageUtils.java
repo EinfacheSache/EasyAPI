@@ -33,14 +33,14 @@ public class RuntimeUsageUtils {
 
 
     public static long getSystemMaxRam() {
-        return osMxBean.getTotalMemorySize() / (1024 * 1024 * 1024);
+        return osMxBean.getTotalMemorySize() / (1024 * 1024);
     }
 
     public static long getSystemFreeRam() {
-        return osMxBean.getFreeMemorySize() / (1024 * 1024 * 1024);
+        return osMxBean.getFreeMemorySize() / (1024 * 1024);
     }
 
     public static long getSystemUsedRam() {
-        return (osMxBean.getTotalMemorySize() / (1024 * 1024 * 1024)) - (osMxBean.getFreeMemorySize() / (1024 * 1024 * 1024));
+        return getSystemMaxRam() - getRuntimeFreeRam();
     }
 }
