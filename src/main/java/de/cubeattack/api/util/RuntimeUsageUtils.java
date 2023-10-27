@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @SuppressWarnings("unused")
@@ -41,22 +43,29 @@ public class RuntimeUsageUtils {
     }
 
     public static long getSystemFreeRam() {
+        return getSystemMaxRam() - getSystemUsedRam();
+    }
+
+    public static long getSystemUsedRam() {
         try {
-            Process process = Runtime.getRuntime().exec("free -h");
+            Process process = Runtime.getRuntime().exec("free -m");
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Mem:")) {
-                    return Long.parseLong(line);
+                    Pattern pattern = Pattern.compile("\\d+");
+                    Matcher matcher = pattern.matcher(line);
+                    long usedMemory = 0;
+                    if (matcher.find()) {
+                        usedMemory = Long.parseLong(matcher.group());
+                    }
+                    System.out.println(usedMemory);
+                    return usedMemory;
                 }
             }
         } catch (IOException e) {
-            return osMxBean.getFreeMemorySize() / (1024 * 1024);
+            return (getRuntimeMaxRam() - osMxBean.getFreeMemorySize()) / (1024 * 1024);
         }
         return Integer.MIN_VALUE;
-    }
-
-    public static long getSystemUsedRam() {
-        return getSystemMaxRam() - getSystemFreeRam();
     }
 }
