@@ -12,9 +12,9 @@ public class RuntimeUsageUtils {
 
 
     public static void test() {
-        System.out.println(osMxBean.getCommittedVirtualMemorySize());
-        System.out.println(osMxBean.getFreePhysicalMemorySize());
-        System.out.println(osMxBean.getTotalPhysicalMemorySize());
+        System.out.println(osMxBean.getCommittedVirtualMemorySize() / (1024 * 1024 * 1024));
+        System.out.println(osMxBean.getFreePhysicalMemorySize() / (1024 * 1024 * 1024));
+        System.out.println(osMxBean.getTotalPhysicalMemorySize() / (1024 * 1024 * 1024));
     }
 
     public static int getCpuCores() {
