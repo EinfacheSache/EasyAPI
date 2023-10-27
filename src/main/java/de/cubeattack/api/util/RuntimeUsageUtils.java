@@ -41,6 +41,6 @@ public class RuntimeUsageUtils {
     }
 
     public static long getSystemUsedRam() {
-        return getSystemMaxRam() - getRuntimeFreeRam();
+        return getSystemMaxRam() - getSystemFreeRam();
     }
 }
