@@ -21,19 +21,23 @@ public class RuntimeUsageUtils {
     }
 
     public static double getCpuUsage() {
+        return osMxBean.getCpuLoad() * 100;
+    }
+
+
+    public static double getProcessCpuUsage() {
         return osMxBean.getProcessCpuLoad() * 100;
     }
 
-
-    public static long getRuntimeMaxRam() {
+    public static long getProcessMaxRam() {
         return Runtime.getRuntime().maxMemory() / (1024 * 1024);
     }
 
-    public static long getRuntimeFreeRam() {
-        return (Runtime.getRuntime().maxMemory() / (1024 * 1024)) - getRuntimeUsedRam();
+    public static long getProcessFreeRam() {
+        return (Runtime.getRuntime().maxMemory() / (1024 * 1024)) - getProcessUsedRam();
     }
 
-    public static long getRuntimeUsedRam() {
+    public static long getProcessUsedRam() {
         return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024);
     }
 
