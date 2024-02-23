@@ -46,17 +46,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org</pattern>
-                                    <shadedPattern>de.cubeattack.api.libraries.org</shadedPattern>
-                                    <excludes>
-                                        <exclude>slf4j.*</exclude>
-                                    </excludes>
-                                </relocation>
-                            </relocations>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
