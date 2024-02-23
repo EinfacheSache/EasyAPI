@@ -22,6 +22,7 @@ public class ConsoleListener {
 
     private final List<ConsoleCommand> commands = new ArrayList<>();
 
+    @SuppressWarnings("UnusedReturnValue")
     public ConsoleListener registerCommand(CommandExecutable runnable, String... cmd) {
         commands.add(new ConsoleCommand(runnable, cmd));
         return this;
