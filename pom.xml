@@ -52,7 +52,7 @@
                                     <pattern>org</pattern>
                                     <shadedPattern>de.cubeattack.api.libraries.org</shadedPattern>
                                     <excludes>
-                                        <exclude>org.slf4j.*</exclude>
+                                        <exclude>slf4j.*</exclude>
                                     </excludes>
                                 </relocation>
                             </relocations>
