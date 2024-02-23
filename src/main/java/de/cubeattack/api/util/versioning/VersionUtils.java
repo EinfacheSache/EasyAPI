@@ -5,7 +5,6 @@ import com.squareup.okhttp.ResponseBody;
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import de.cubeattack.api.util.RestAPIUtils;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
@@ -68,7 +67,7 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static @NotNull VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting) {
+    public static VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting) {
 
         Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
 
