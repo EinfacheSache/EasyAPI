@@ -26,7 +26,7 @@ public class StatsManager {
             @Override
             public void run() {
 
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), new Gson().toJson(stats));
+                RequestBody requestBody = RequestBody.create(new Gson().toJson(stats), MediaType.parse("application/json"));
                 if(!updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8)))))
                     LogManager.getLogger().info("Request to update stats failed");
                 else
