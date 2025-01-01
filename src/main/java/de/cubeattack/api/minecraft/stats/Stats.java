@@ -1,5 +1,6 @@
 package de.cubeattack.api.minecraft.stats;
 
+@SuppressWarnings("unused")
 public class Stats {
 
     private final String serverType;
