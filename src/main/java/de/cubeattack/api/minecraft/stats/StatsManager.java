@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class StatsManager {
 
 
@@ -20,7 +21,7 @@ public class StatsManager {
     private static final String statsServer = "https://metrics.einfachesache.de/api/stats/plugin";
 
 
-    public static void runStatsUpdateSchedule(String ID, String address, Stats stats, int updatePeriodInSec) {
+    public static void runStatsUpdateSchedule(String ID, String address, Stats stats, long updatePeriodInSec) {
 
         LogManager.getLogger().info("StatsUpdate scheduler started");
 
@@ -34,7 +35,7 @@ public class StatsManager {
                 else
                     LogManager.getLogger().debug("Request to update stats was successful");
             }
-        }, 1000, updatePeriodInSec * 5L);
+        }, 1000, 1000 * updatePeriodInSec);
     }
 
     private static boolean updateStats(RequestBody requestBody, String identifier) {
