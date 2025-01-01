@@ -16,11 +16,11 @@ import java.util.UUID;
 public class StatsManager {
 
 
-    private final OkHttpClient client = new OkHttpClient();
-    private final String statsServer = "https://metrics.einfachesache.de/api/stats/plugin";
+    private static final OkHttpClient client = new OkHttpClient();
+    private static final String statsServer = "https://metrics.einfachesache.de/api/stats/plugin";
 
 
-    private void runStatsUpdateSchedule(String ID, String address, Stats stats, int updatePeriodInSec) {
+    public static void runStatsUpdateSchedule(String ID, String address, Stats stats, int updatePeriodInSec) {
 
         LogManager.getLogger().info("StatsUpdate scheduler started");
 
@@ -37,7 +37,7 @@ public class StatsManager {
         }, 1000, updatePeriodInSec * 5L);
     }
 
-    public boolean updateStats(RequestBody requestBody, String identifier) {
+    private static boolean updateStats(RequestBody requestBody, String identifier) {
         try {
             return client.newCall(new Request.Builder()
                     .url(statsServer)
