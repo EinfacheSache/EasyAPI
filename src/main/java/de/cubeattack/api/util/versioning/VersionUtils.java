@@ -1,10 +1,10 @@
 package de.cubeattack.api.util.versioning;
 
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import de.cubeattack.api.util.RestAPIUtils;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
@@ -80,6 +80,7 @@ public class VersionUtils {
 
             if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
                 LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
+                //wegen Änderung response.body() nie null somit bedarf für Änderung
                 if (response != null && response.body() != null)
                     response.body().close();
                 return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "ERROR", "NOT FOUND", String.valueOf(response == null ? "REQUEST FAILED (NULL)" : response));
