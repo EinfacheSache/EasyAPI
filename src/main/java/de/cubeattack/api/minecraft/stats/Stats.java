@@ -22,8 +22,9 @@ public class Stats {
     private final boolean onlineMode;
     private final boolean proxyProtocol;
 
+
     public Stats(String serverType, String serverVersion, String serverName, String javaVersion, String osName, String osArch, String osVersion, String pluginVersion, String versionStatus, String versionError, String updateSetting, String neoProtectPlan, int playerAmount, int managedServers, int coreCount, boolean onlineMode, boolean proxyProtocol) {
-        this.serverType = serverType;
+        this.serverType = serverType.toLowerCase();
         this.serverVersion = serverVersion;
         this.serverName = serverName;
         this.javaVersion = javaVersion;
