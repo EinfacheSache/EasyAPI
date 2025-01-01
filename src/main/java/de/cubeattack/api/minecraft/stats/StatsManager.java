@@ -1,11 +1,8 @@
 package de.cubeattack.api.minecraft.stats;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
 import de.cubeattack.api.logger.LogManager;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -40,13 +37,18 @@ public class StatsManager {
 
     private static boolean updateStats(RequestBody requestBody, String identifier) {
         try {
-            return client.newCall(new Request.Builder()
+            Request request = new Request.Builder()
                     .url(statsServer)
                     .addHeader("accept", "*/*")
                     .addHeader("Content-Type", "application/json")
                     .header("identifier", identifier)
-                    .post(requestBody).build()).execute().code() == 200;
-        }catch (IOException exception) {
+                    .post(requestBody)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                return response.code() == 200;
+            }
+        } catch (IOException exception) {
             return false;
         }
     }
