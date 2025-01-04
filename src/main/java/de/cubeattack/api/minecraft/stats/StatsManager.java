@@ -2,6 +2,7 @@ package de.cubeattack.api.minecraft.stats;
 
 import com.google.gson.Gson;
 import de.cubeattack.api.logger.LogManager;
+import de.cubeattack.api.shutdown.ShutdownHook;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -34,16 +35,32 @@ public class StatsManager {
             }
         }, 1000, 1000 * updatePeriodInSec);
 
-        /*ShutdownHook.register(() -> {
-            RequestBody requestBody = RequestBody.create(new Gson().toJson(new Stats()), MediaType.parse("application/json"));
-            int code = updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
+        ShutdownHook.register(() -> {
+            int code = sendOfflineStatus(String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
             if(code == 200)
                 LogManager.getLogger().info("Request to send shutdown status to stats server was successful");
             else {
                 LogManager.getLogger().info("Request to send shutdown status to stats server failed (error: " + code + ")");
             }
         });
-         */
+
+    }
+
+    private static int sendOfflineStatus(String identifier) {
+        Request request = new Request.Builder()
+                .url(statsServer)
+                .addHeader("accept", "*/*")
+                .addHeader("Content-Type", "application/json")
+                .header("identifier", identifier)
+                .delete()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.code();
+        }catch (IOException exception){
+            LogManager.getLogger().info("Request to send Offline status failed (" + exception.getMessage() + ")");
+            return 500;
+        }
     }
 
     private static int updateStats(RequestBody requestBody, String identifier) {
