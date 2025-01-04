@@ -21,10 +21,10 @@ public class StatsManager {
 
         LogManager.getLogger().info("StatsUpdate scheduler started");
 
-        new Timer().schedule(new TimerTask() {
+        Timer statsUpdateTimer = new Timer();
+        statsUpdateTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-
                 RequestBody requestBody = RequestBody.create(new Gson().toJson(stats), MediaType.parse("application/json"));
                 int code = updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
                 if(code == 200)
@@ -36,6 +36,7 @@ public class StatsManager {
         }, 1000, 1000 * updatePeriodInSec);
 
         ShutdownHook.register(() -> {
+            statsUpdateTimer.cancel();
             int code = sendOfflineStatus(String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
             if(code == 302)
                 LogManager.getLogger().info("Request to send shutdown status to stats server was successful");
