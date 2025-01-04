@@ -14,7 +14,6 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public class StatsManager {
 
-
     private static final OkHttpClient client = new OkHttpClient();
     private static final String statsServer = "https://metrics.einfachesache.de/api/stats/plugin";
 
