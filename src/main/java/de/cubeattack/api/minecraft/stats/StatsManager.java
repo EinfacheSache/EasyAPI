@@ -37,7 +37,7 @@ public class StatsManager {
 
         ShutdownHook.register(() -> {
             int code = sendOfflineStatus(String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
-            if(code == 200)
+            if(code == 302)
                 LogManager.getLogger().info("Request to send shutdown status to stats server was successful");
             else {
                 LogManager.getLogger().info("Request to send shutdown status to stats server failed (error: " + code + ")");
