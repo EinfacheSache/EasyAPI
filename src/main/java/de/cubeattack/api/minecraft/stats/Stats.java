@@ -1,28 +1,31 @@
 package de.cubeattack.api.minecraft.stats;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldMayBeFinal"})
 public class Stats {
 
-    private final String serverType;
-    private final String serverVersion;
-    private final String serverName;
-    private final String javaVersion;
-    private final String osName;
-    private final String osArch;
-    private final String osVersion;
-    private final String pluginVersion;
-    private final String versionStatus;
-    private final String versionError;
-    private final String updateSetting;
-    private final String neoProtectPlan;
+    private String serverType;
+    private String serverVersion;
+    private String serverName;
+    private String javaVersion;
+    private String osName;
+    private String osArch;
+    private String osVersion;
+    private String pluginVersion;
+    private String versionStatus;
+    private String versionError;
+    private String updateSetting;
+    private String neoProtectPlan;
 
-    private final int playerAmount;
-    private final int managedServers;
-    private final int coreCount;
+    private int playerAmount;
+    private int managedServers;
+    private int coreCount;
 
-    private final boolean onlineMode;
-    private final boolean proxyProtocol;
+    private boolean onlineMode;
+    private boolean proxyProtocol;
 
+    public Stats(int i){
+        this.playerAmount = i;
+    }
 
     public Stats(String serverType, String serverVersion, String serverName, String javaVersion, String osName, String osArch, String osVersion, String pluginVersion, String versionStatus, String versionError, String updateSetting, String neoProtectPlan, int playerAmount, int managedServers, int coreCount, boolean onlineMode, boolean proxyProtocol) {
         this.serverType = serverType.toLowerCase();
