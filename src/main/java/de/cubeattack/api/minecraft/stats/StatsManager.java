@@ -37,7 +37,7 @@ public class StatsManager {
         }, 1000, 1000 * updatePeriodInSec);
 
         ShutdownHook.register(() -> {
-            RequestBody requestBody = RequestBody.create(new Gson().toJson(new Stats(0)), MediaType.parse("application/json"));
+            RequestBody requestBody = RequestBody.create(new Gson().toJson(new Stats()), MediaType.parse("application/json"));
             int code = updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
             if(code == 200)
                 LogManager.getLogger().info("Request to send shutdown status to stats server was successful");

@@ -83,7 +83,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.12</version>
-
+            <scope>provided</scope>
         </dependency>
 
         <!-- Needed for Files -->
@@ -103,7 +103,7 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>5.0.0-alpha.14</version>
-
+            <scope>provided</scope>
         </dependency>
 
         <!-- Needed for Building -->
