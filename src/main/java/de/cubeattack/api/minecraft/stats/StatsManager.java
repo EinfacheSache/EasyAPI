@@ -27,29 +27,30 @@ public class StatsManager {
             public void run() {
 
                 RequestBody requestBody = RequestBody.create(new Gson().toJson(stats), MediaType.parse("application/json"));
-                if(!updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8)))))
-                    LogManager.getLogger().info("Request to update stats failed");
-                else
+                int code = updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
+                if(code == 200)
                     LogManager.getLogger().debug("Request to update stats was successful");
+                else {
+                    LogManager.getLogger().info("Request to update stats failed (error: " + code + ")");
+                }
             }
         }, 1000, 1000 * updatePeriodInSec);
     }
 
-    private static boolean updateStats(RequestBody requestBody, String identifier) {
-        try {
-            Request request = new Request.Builder()
-                    .url(statsServer)
-                    .addHeader("accept", "*/*")
-                    .addHeader("Content-Type", "application/json")
-                    .header("identifier", identifier)
-                    .post(requestBody)
-                    .build();
+    private static int updateStats(RequestBody requestBody, String identifier) {
+        Request request = new Request.Builder()
+                .url(statsServer)
+                .addHeader("accept", "*/*")
+                .addHeader("Content-Type", "application/json")
+                .header("identifier", identifier)
+                .post(requestBody)
+                .build();
 
-            try (Response response = client.newCall(request).execute()) {
-                return response.code() == 200;
-            }
-        } catch (IOException exception) {
-            return false;
+        try (Response response = client.newCall(request).execute()) {
+            return response.code();
+        }catch (IOException exception){
+            LogManager.getLogger().info("Request to update stats failed (" + exception.getMessage() + ")");
+            return 500;
         }
     }
 }
