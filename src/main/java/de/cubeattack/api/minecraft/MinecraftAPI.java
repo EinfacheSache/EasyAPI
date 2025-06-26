@@ -1,7 +1,8 @@
 package de.cubeattack.api.minecraft;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.cubeattack.api.logger.LogManager;
-import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.Scanner;
@@ -15,8 +16,11 @@ public class MinecraftAPI
         String API_URL = "https://api.mojang.com/users/profiles/minecraft/";
 
         try (Scanner scanner = new Scanner(new URL(API_URL + playerName).openConnection().getInputStream())) {
-            return getUniqueIdFromString(new JSONObject(scanner.nextLine()).getString("id"));
-        }catch (Exception ex) {
+            String json = scanner.nextLine();
+            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+            String id = jsonObject.get("id").getAsString();
+            return getUniqueIdFromString(id);
+        } catch (Exception ex) {
             LogManager.getLogger().error("Error whiles loading UUID from " + playerName + " : " + ex.getLocalizedMessage());
             return null;
         }

@@ -1,11 +1,12 @@
 package de.cubeattack.api.util.versioning;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import de.cubeattack.api.util.RestAPIUtils;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -81,15 +82,19 @@ public class VersionUtils {
             if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
                 LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
                 //wegen Änderung response.body() nie null somit bedarf für Änderung
-                if (response != null && response.body() != null)
+                if (response != null)
                     response.body().close();
                 return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "ERROR", "NOT FOUND", String.valueOf(response == null ? "REQUEST FAILED (NULL)" : response));
             }
 
-            JSONObject jsonResponse = new JSONObject(getBody(response));
-            String downloadURL = jsonResponse.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
-            String latestVersion = jsonResponse.getString("tag_name");
-            String releaseUrl = jsonResponse.getString("html_url");
+            String json = getBody(response); // deine Methode
+            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+            String latestVersion = jsonObject.get("tag_name").getAsString();
+            String releaseUrl = jsonObject.get("html_url").getAsString();
+            String downloadURL = jsonObject.getAsJsonArray("assets")
+                    .get(0).getAsJsonObject()
+                    .get("browser_download_url").getAsString();
 
             int compareResult = compareVersions((fileVersion.contains(":") ? fileVersion.split(":")[0] : fileVersion), latestVersion);
 
