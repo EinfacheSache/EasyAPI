@@ -12,12 +12,18 @@ public class Logs {
 
     public static void write(Path path,String message) {
         try {
+
+            if (path.getParent() != null) {
+                Files.createDirectories(path.getParent());
+            }
+
             Files.writeString(
                     path,
                     message + "\n",
                     StandardOpenOption.APPEND,
                     StandardOpenOption.CREATE
             );
+
         } catch (IOException e) {
             LogManager.getLogger().error("Error writing to log file", e);
         }
