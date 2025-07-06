@@ -79,6 +79,12 @@ public class FileUtils
     public double getDouble(String path) {
         return this.getConfig().getDouble(path);
     }
+    public double getLong(String path) {
+        return this.getConfig().getLong(path);
+    }
+    public Object getObject(String path) {
+        return this.getConfig().get(path);
+    }
     public List<?> getList(String path) {
         return this.getConfig().getList(path);
     }
@@ -86,17 +92,23 @@ public class FileUtils
         return this.getConfig().getStringList(path);
     }
 
+    public String get(String path, String def) {
+        return this.getConfig().getString(path, def);
+    }
     public int getInt(String path, int def) {
         return this.getConfig().getInt(path, def);
     }
     public boolean getBoolean(String path, boolean def) {
         return this.getConfig().getBoolean(path, def);
     }
-    public String getString(String path, String def) {
-        return this.getConfig().getString(path, def);
-    }
     public double getDouble(String path, double def) {
         return this.getConfig().getDouble(path, def);
+    }
+    public double getLong(String path, long def) {
+        return this.getConfig().getLong(path, def);
+    }
+    public Object getObject(String path, Object def) {
+        return this.getConfig().get(path, def);
     }
 
     public ConfigurationSection getConfigurationSection(String path) {
