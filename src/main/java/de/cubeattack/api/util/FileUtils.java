@@ -79,7 +79,7 @@ public class FileUtils
     public double getDouble(String path) {
         return this.getConfig().getDouble(path);
     }
-    public double getLong(String path) {
+    public long getLong(String path) {
         return this.getConfig().getLong(path);
     }
     public Object getObject(String path) {
@@ -104,7 +104,7 @@ public class FileUtils
     public double getDouble(String path, double def) {
         return this.getConfig().getDouble(path, def);
     }
-    public double getLong(String path, long def) {
+    public long getLong(String path, long def) {
         return this.getConfig().getLong(path, def);
     }
     public Object getObject(String path, Object def) {
