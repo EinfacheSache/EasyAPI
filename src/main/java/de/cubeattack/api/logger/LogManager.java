@@ -6,7 +6,6 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-
 @SuppressWarnings("unused")
 public class LogManager {
 
@@ -31,10 +30,12 @@ public class LogManager {
     }
 
     public LogManager setLevel(Object level, Object logger) {
+        if (logger instanceof java.util.logging.Logger && level instanceof java.util.logging.Level) {
+            ((java.util.logging.Logger) logger).setLevel((java.util.logging.Level) level);
+            return this;
+        }
         if (logger instanceof ch.qos.logback.classic.Logger && level instanceof ch.qos.logback.classic.Level)
             ((ch.qos.logback.classic.Logger) logger).setLevel((ch.qos.logback.classic.Level) level);
-        if (logger instanceof java.util.logging.Logger && level instanceof java.util.logging.Level)
-            ((java.util.logging.Logger) logger).setLevel((java.util.logging.Level) level);
         return this;
     }
 
@@ -96,12 +97,10 @@ public class LogManager {
             }
 
             @Override
-            public void flush() {
-            }
+            public void flush() {}
 
             @Override
-            public void close() throws SecurityException {
-            }
+            public void close() throws SecurityException {}
         };
 
         for (Handler existingHandler : javaLogger.getHandlers()) {
