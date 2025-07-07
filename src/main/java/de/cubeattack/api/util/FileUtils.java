@@ -34,8 +34,13 @@ public class FileUtils
         copyToFile(skipLoading);
     }
 
+    public void reloadConfiguration() {
+        copyToFile(false);
+    }
+
     private void copyToFile(boolean skipLoading) {
         try {
+
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 Files.copy(inputStream, file.toPath());
@@ -46,10 +51,14 @@ public class FileUtils
             }
 
             LogManager.getLogger().info("The file " + fileName + " has been successfully loaded");
-        } catch (IOException | InvalidConfigurationException ex) {
+
+        } catch (InvalidConfigurationException ex) {
+            LogManager.getLogger().error("Error whiles loading : " + fileName + " " + ex.getLocalizedMessage());
+        } catch (IOException ex) {
             LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
         }
     }
+
 
     public void save() {
        API.getExecutorService().submit(() -> {
