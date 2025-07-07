@@ -10,9 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils
@@ -97,7 +97,8 @@ public class FileUtils
         return this.getConfig().get(path);
     }
     public Map<String, Object> getMap(String path, boolean deep) {
-        return Objects.requireNonNull(this.getConfig().getConfigurationSection(path)).getValues(deep);
+        var section = getConfig().getConfigurationSection(path);
+        return section == null ? Collections.emptyMap() : section.getValues(deep);
     }
     public List<?> getList(String path) {
         return this.getConfig().getList(path);
