@@ -19,7 +19,7 @@ public class LogManager {
     }
 
     private static final LogManager logManager = new LogManager();
-    public Object logger = Logger.getLogger("de.cubeattack");
+    public Object logger = Logger.getLogger("de.einfachesache");
 
     public LogManager setLogger(Object logger) {
         this.logger = logger;
