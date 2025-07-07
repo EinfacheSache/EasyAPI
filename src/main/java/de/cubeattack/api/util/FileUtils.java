@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils
@@ -88,8 +89,11 @@ public class FileUtils
     public List<?> getList(String path) {
         return this.getConfig().getList(path);
     }
-    public List<String> getListAsList(String path) {
+    public List<String> getStringList(String path) {
         return this.getConfig().getStringList(path);
+    }
+    public List<Map<?,?>> getMapList(String path) {
+        return this.getConfig().getMapList(path);
     }
 
     public String get(String path, String def) {
@@ -109,6 +113,9 @@ public class FileUtils
     }
     public Object getObject(String path, Object def) {
         return this.getConfig().get(path, def);
+    }
+    public List<?> getList(String path, List<?> def) {
+        return this.getConfig().getList(path, def);
     }
 
     public ConfigurationSection getConfigurationSection(String path) {
