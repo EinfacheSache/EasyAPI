@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils
@@ -85,6 +86,9 @@ public class FileUtils
     }
     public Object getObject(String path) {
         return this.getConfig().get(path);
+    }
+    public Map<String, Object> getMap(String path, boolean deep) {
+        return Objects.requireNonNull(this.getConfig().getConfigurationSection(path)).getValues(deep);
     }
     public List<?> getList(String path) {
         return this.getConfig().getList(path);
