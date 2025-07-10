@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
@@ -21,33 +22,50 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class VersionUtils {
 
+
     public static String getPomVersion(Class<?> clazz) {
-        try (InputStream input = clazz.getClassLoader()
-                .getResourceAsStream("META-INF/maven/de/cubeattack/proxymanager/pom.properties")) {
+        try {
+            // Path to the plugin's own JAR file
+            URL jarUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
+            File jarFile = new File(jarUrl.toURI());
 
-            if (input == null) {
-                LogManager.getLogger().warn("pom.xml nicht gefunden!");
-                return null;
-            }
+            // Path to the .class file of the given class, e.g. de/cubeattack/proxymanager/Main.class
+            String classPath = clazz.getName().replace('.', '/') + ".class";
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            Pattern versionPattern = Pattern.compile("<version>(.*?)</version>");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Matcher matcher = versionPattern.matcher(line);
-                if (matcher.find()) {
-                    return matcher.group(1);
+            try (JarFile jar = new JarFile(jarFile)) {
+                // Ensure that this class is actually inside this JAR
+                if (jar.getEntry(classPath) == null) {
+                    LogManager.getLogger().warn("Class not found inside this JAR: " + classPath);
+                    return null;
                 }
-            }
 
-        } catch (IOException e) {
-            LogManager.getLogger().warn("Fehler beim Lesen der pom.xml: " + e.getMessage());
+                // Scan all pom.properties entries in META-INF/maven/
+                for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements(); ) {
+                    JarEntry entry = entries.nextElement();
+                    String name = entry.getName();
+
+                    if (!name.startsWith("META-INF/maven/") || !name.endsWith("pom.properties"))
+                        continue;
+
+                    try (InputStream is = jar.getInputStream(entry)) {
+                        Properties props = new Properties();
+                        props.load(is);
+
+                        String version = props.getProperty("version");
+                        if (version != null) {
+                            return version;
+                        }
+                    }
+                }
+
+                LogManager.getLogger().warn("No pom.properties found in this JAR.");
+            }
+        } catch (Exception e) {
+            LogManager.getLogger().error("Failed to read version from pom.properties: " + e.getMessage(), e);
         }
 
         return null;
