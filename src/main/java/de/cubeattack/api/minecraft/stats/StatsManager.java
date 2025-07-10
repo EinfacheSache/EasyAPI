@@ -30,7 +30,7 @@ public class StatsManager {
                 if(code == 200)
                     LogManager.getLogger().debug("Request to update stats was successful");
                 else {
-                    LogManager.getLogger().info("Request to update stats failed (error: " + code + ")");
+                    LogManager.getLogger().warn("Request to update stats failed (error-code: " + code + ")");
                 }
             }
         }, 1000, 1000 * updatePeriodInSec);
@@ -41,7 +41,7 @@ public class StatsManager {
             if(code == 302)
                 LogManager.getLogger().info("Request to send shutdown status to stats server was successful");
             else {
-                LogManager.getLogger().info("Request to send shutdown status to stats server failed (error: " + code + ")");
+                LogManager.getLogger().warn("Request to send shutdown status to stats server failed (error-code: " + code + ")");
             }
         });
 
@@ -59,7 +59,7 @@ public class StatsManager {
         try (Response response = client.newCall(request).execute()) {
             return response.code();
         }catch (IOException exception){
-            LogManager.getLogger().info("Request to send Offline status failed (" + exception.getMessage() + ")");
+            LogManager.getLogger().error("Failed to send shutdown status to the stats server (exception: " + exception.getMessage() + ")");
             return 500;
         }
     }
@@ -76,7 +76,7 @@ public class StatsManager {
         try (Response response = client.newCall(request).execute()) {
             return response.code();
         }catch (IOException exception){
-            LogManager.getLogger().info("Request to update stats failed (" + exception.getMessage() + ")");
+            LogManager.getLogger().error("Failed to send stats update to the stats server (exception: " + exception.getMessage() + ")");
             return 500;
         }
     }
