@@ -11,7 +11,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,28 +28,28 @@ import java.util.regex.Pattern;
 public class VersionUtils {
 
     public static String getPomVersion(Class<?> clazz) {
-        try {
-            File pluginDirectory = new File(clazz.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
-            File pomFile = new File(pluginDirectory, "pom.xml");
+        try (InputStream input = clazz.getClassLoader()
+                .getResourceAsStream("META-INF/maven/de/cubeattack/proxymanager/pom.properties")) {
 
-            LogManager.getLogger().info("Absolute path of pom.xml: " + pomFile.getAbsolutePath()); // Hinzugefügter Code
+            if (input == null) {
+                LogManager.getLogger().warn("pom.xml nicht gefunden!");
+                return null;
+            }
 
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(pomFile));
-            String line;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             Pattern versionPattern = Pattern.compile("<version>(.*?)</version>");
-
-            while ((line = bufferedReader.readLine()) != null) {
+            String line;
+            while ((line = reader.readLine()) != null) {
                 Matcher matcher = versionPattern.matcher(line);
                 if (matcher.find()) {
-                    bufferedReader.close();
                     return matcher.group(1);
                 }
             }
 
-            bufferedReader.close();
-        } catch (IOException | URISyntaxException ex) {
-            LogManager.getLogger().warn("Error reading pom.xml file: " + ex.getMessage());
+        } catch (IOException e) {
+            LogManager.getLogger().warn("Fehler beim Lesen der pom.xml: " + e.getMessage());
         }
+
         return null;
     }
 
@@ -205,7 +204,7 @@ public class VersionUtils {
                     file.getParentFile().mkdirs();
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
                 return -1;
             }
 
