@@ -17,7 +17,7 @@ public class StatsManager {
     private static final OkHttpClient client = new OkHttpClient();
     private static final String statsServer = "https://metrics.einfachesache.de/api/stats/plugin";
 
-    public static void runStatsUpdateSchedule(String ID, String address, Stats stats, long updatePeriodInSec) {
+    public static void runStatsUpdateSchedule(String ID, String address, StatsProvider stats, long updatePeriodInSec) {
 
         LogManager.getLogger().info("StatsUpdate scheduler started");
 
@@ -25,7 +25,7 @@ public class StatsManager {
         statsUpdateTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                RequestBody requestBody = RequestBody.create(new Gson().toJson(stats), MediaType.parse("application/json"));
+                RequestBody requestBody = RequestBody.create(new Gson().toJson(stats.getStats()), MediaType.parse("application/json"));
                 int code = updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
                 if(code == 200)
                     LogManager.getLogger().debug("Request to update stats was successful");
