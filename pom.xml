@@ -74,6 +74,12 @@
             <version>1.4.12</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Needed for Console output) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+        </dependency>
 
         <!-- Needed for Files -->
         <dependency>
