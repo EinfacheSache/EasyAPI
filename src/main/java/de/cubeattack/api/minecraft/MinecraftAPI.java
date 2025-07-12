@@ -4,24 +4,51 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.cubeattack.api.logger.LogManager;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class MinecraftAPI
 {
 
-    public static UUID loadUUID(String playerName) {
-        String API_URL = "https://api.mojang.com/users/profiles/minecraft/";
+    public static void main(String[] args) {
+        System.out.print(loadUUID("EinfacheSache"));
+    }
 
-        try (Scanner scanner = new Scanner(new URL(API_URL + playerName).openConnection().getInputStream())) {
-            String json = scanner.nextLine();
-            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-            String id = jsonObject.get("id").getAsString();
-            return getUniqueIdFromString(id);
+    public static UUID loadUUID(String playerName) {
+        String url = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
+
+        try {
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestProperty("User-Agent", "Java");
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 204) {
+                LogManager.getLogger().warn("Player '" + playerName + "' not found (204 No Content)");
+                return null;
+            }
+
+            if (responseCode != 200) {
+                LogManager.getLogger().error("Failed to fetch UUID for '" + playerName + "'. HTTP response code: " + responseCode);
+                return null;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                String json = reader.lines().collect(Collectors.joining());
+
+                if (json.isEmpty())
+                    return null;
+
+                JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
+                return getUniqueIdFromString(obj.get("id").getAsString());
+            }
+
         } catch (Exception ex) {
-            LogManager.getLogger().error("Error whiles loading UUID from " + playerName + " : " + ex.getLocalizedMessage());
+            LogManager.getLogger().error("Error loading UUID for '" + playerName + "': " + ex.getMessage());
             return null;
         }
     }
