@@ -15,11 +15,6 @@ public class ConsoleListener {
         run();
     }
 
-    public static void main(String[] args) {
-        new ConsoleListener().registerCommand(args1 -> System.out.println("Ausgabe"), "test");
-        //new ConsoleListener().registerCommand(args1 -> System.out.println("test1"), "test");
-    }
-
     private final List<ConsoleCommand> commands = new ArrayList<>();
 
     @SuppressWarnings("UnusedReturnValue")

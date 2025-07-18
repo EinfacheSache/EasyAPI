@@ -18,10 +18,9 @@ import java.util.ResourceBundle;
 
 @SuppressWarnings("unused")
 public class Localization {
+
     private final String resourceBundlePrefix;
-
     private final Locale defaultLocale;
-
     private final ClassLoader loader;
 
     public Localization(String resourceBundlePrefix, Locale defaultLocale) {
@@ -87,19 +86,19 @@ public class Localization {
     public ResourceBundle getDefaultResourceBundle() {
         return ResourceBundle.getBundle(this.resourceBundlePrefix, this.defaultLocale, this.loader, new UTF8Control());
     }
-}
 
-class UTF8Control extends ResourceBundle.Control {
-    @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
-        String bundleName = toBundleName(baseName, locale);
-        String resourceName = toResourceName(bundleName, "properties");
-        try (InputStream stream = loader.getResourceAsStream(resourceName)) {
-            if (stream != null) {
-                return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
+    static class UTF8Control extends ResourceBundle.Control {
+        @Override
+        public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload) throws IllegalAccessException, InstantiationException, IOException {
+            String bundleName = toBundleName(baseName, locale);
+            String resourceName = toResourceName(bundleName, "properties");
+            try (InputStream stream = loader.getResourceAsStream(resourceName)) {
+                if (stream != null) {
+                    return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
+                }
+            } catch (Exception ignored) {
             }
-        } catch (Exception ignored) {
+            return super.newBundle(baseName, locale, format, loader, reload);
         }
-        return super.newBundle(baseName, locale, format, loader, reload);
     }
 }

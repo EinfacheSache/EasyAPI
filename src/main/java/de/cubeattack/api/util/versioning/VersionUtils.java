@@ -9,7 +9,10 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -19,7 +22,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -33,7 +35,7 @@ public class VersionUtils {
             URL jarUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
             File jarFile = new File(jarUrl.toURI());
 
-            // Path to the .class file of the given class, e.g. de/cubeattack/proxymanager/Main.class
+            // Path to the .class file of the given class
             String classPath = clazz.getName().replace('.', '/') + ".class";
 
             try (JarFile jar = new JarFile(jarFile)) {
@@ -62,7 +64,7 @@ public class VersionUtils {
                     }
                 }
 
-                LogManager.getLogger().warn("No pom.properties found in this JAR.");
+                LogManager.getLogger().warn("No pom.properties found in this JAR");
             }
         } catch (Exception e) {
             LogManager.getLogger().error("Failed to read version from pom.properties: " + e.getMessage(), e);
@@ -85,20 +87,19 @@ public class VersionUtils {
 
     private static String latestUpdatedVersion = null;
 
-    public static VersionUtils.Result checkVersion(String gitHubUser, String repo, String pluginVersion, UpdateSetting updateSetting) {
+    public static VersionUtils.Result checkVersion(String pluginName, String pluginVersion, String githubUser, String githubRepo, UpdateSetting updateSetting) {
 
-        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", "");
+        Result result = new Result(VersionStatus.FAILED, "UNKNOWN", "UNKNOWN", "UNKNOWN", "NOT FOUND", null);
 
         try {
 
             String fileVersion = (latestUpdatedVersion == null ? pluginVersion : latestUpdatedVersion);
             RestAPIUtils restAPIUtils = new RestAPIUtils();
-            String url = "https://api.github.com/repos/" + gitHubUser + "/" + repo + "/releases/latest";
+            String url = "https://api.github.com/repos/" + githubUser + "/" + githubRepo + "/releases/latest";
             Response response = restAPIUtils.request("GET", url, null);
 
             if (response == null || response.code() != HttpURLConnection.HTTP_OK) {
                 LogManager.getLogger().warn("Plugin (" + fileVersion + ") version check failed '" + response + " (code: " + (response == null ? -1 : response.code()) + ")'");
-                //wegen Änderung response.body() nie null somit bedarf für Änderung
                 if (response != null)
                     response.body().close();
                 return new Result(VersionStatus.FAILED, "ERROR", "ERROR", "ERROR", "NOT FOUND", String.valueOf(response == null ? "REQUEST FAILED (NULL)" : response));
@@ -118,26 +119,26 @@ public class VersionUtils {
             switch (compareResult) {
 
                 case 1: {
-                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
-                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, 0, null));
+                    result = new Result(VersionStatus.DEVELOPMENT, pluginVersion, latestVersion, downloadURL, releaseUrl, null);
+                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(pluginName, result, updateSetting, null));
                     latestUpdatedVersion = future.get();
                     break;
                 }
 
                 case 0: {
-                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
+                    result = new Result(VersionStatus.LATEST, pluginVersion, latestVersion, downloadURL, releaseUrl, null);
                     break;
                 }
 
                 case -1: {
-                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
-                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(result, updateSetting, 0, null));
+                    result = new Result(VersionStatus.OUTDATED, pluginVersion, latestVersion, downloadURL, releaseUrl, null);
+                    Future<java.lang.String> future = Objects.requireNonNull(updateToLatestVersion(pluginName, result, updateSetting, null));
                     latestUpdatedVersion = future.get();
                 }
             }
 
             if (latestUpdatedVersion != null)
-                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, downloadURL, releaseUrl, "");
+                result = new Result(VersionStatus.REQUIRED_RESTART, pluginVersion, latestVersion, downloadURL, releaseUrl, null);
 
         } catch (Exception e) {
             LogManager.getLogger().error("Exception trying to get the latest plugin version", e);
@@ -157,11 +158,11 @@ public class VersionUtils {
     }
 
 
-    public static Future<String> updateToLatestVersion(Result result, UpdateSetting updateSetting, int delay, CallbackExecutable callback) {
+    public static Future<String> updateToLatestVersion(String pluginName, Result result, UpdateSetting updateSetting, CallbackExecutable callback) {
 
-        String savePath = "./plugins/NeoProtect-" + result.latestVersion + ".jar";
+        String savePath = "./plugins/" + pluginName + "-" + result.latestVersion + ".jar";
 
-        return API.getExecutorService().schedule(() -> {
+        return API.getExecutorService().submit(() -> {
 
             if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestUpdatedVersion;
 
@@ -177,11 +178,11 @@ public class VersionUtils {
                 return latestUpdatedVersion;
             }
 
-            LogManager.getLogger().warn("Starting auto-updater for NeoProtect plugin...");
+            LogManager.getLogger().warn("Starting auto-updater for " + pluginName + " plugin...");
 
             try {
                 LogManager.getLogger().info("Deleting the old plugin version...");
-                long deletingTime = AutoUpdater.deleteOldVersion();
+                long deletingTime = AutoUpdater.deleteOldVersion(pluginName);
                 LogManager.getLogger().info("Completed deleting old plugin version! (took " + deletingTime + "ms)");
                 LogManager.getLogger().info("Download the latest release " + result.latestVersion + "...");
                 long updateTime = AutoUpdater.downloadFile(result.getDownloadUrl(), savePath);
@@ -196,7 +197,7 @@ public class VersionUtils {
                 LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
             }
             return null;
-        }, delay, TimeUnit.SECONDS);
+        });
     }
 
     private static int compareVersions(String currentVersion, String lastestVersion) {
@@ -237,7 +238,7 @@ public class VersionUtils {
             }
         }
 
-        private static long deleteOldVersion() {
+        private static long deleteOldVersion(String pluginName) {
             long startTime = System.currentTimeMillis();
 
             for (File file : Objects.requireNonNull(new File("./plugins/").listFiles())) {
@@ -256,7 +257,7 @@ public class VersionUtils {
                     try (InputStream in = jar.getInputStream(entry)) {
                         HashMap<String, Object> description = new Yaml().load(in);
 
-                        if (description.get("name").toString().equalsIgnoreCase("NeoProtect")) {
+                        if (description.get("name").toString().equalsIgnoreCase(pluginName)) {
                             if (!file.exists()) return -2;
                             if (!file.delete()) return -1;
                             return System.currentTimeMillis() - startTime;
@@ -271,6 +272,7 @@ public class VersionUtils {
     }
 
     public static class Result {
+
         private VersionStatus versionStatus;
         private final String currentVersion;
         private final String latestVersion;
