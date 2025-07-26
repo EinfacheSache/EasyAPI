@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
+import de.cubeattack.api.util.JavaUtils;
 import de.cubeattack.api.util.RestAPIUtils;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -38,7 +39,7 @@ public class VersionUtils {
             // Path to the .class file of the given class
             String classPath = clazz.getName().replace('.', '/') + ".class";
 
-            if (!file.getName().endsWith(".jar")) {
+            if (!JavaUtils.isRunningAsJarFile()) {
                 LogManager.getLogger().info("Failed to access pom.properties. Not running from a JAR file: " + file.getAbsolutePath());
                 return "VERSION NOT FOUND (Not running from JAR)";
             }
