@@ -15,8 +15,8 @@ public class JavaUtils {
         return Integer.parseInt(version);
     }
 
-    public static boolean isRunningAsJarFile() {
-        return JavaUtils.class.getProtectionDomain()
+    public static boolean isRunningAsJarFile(Class<?> clazz) {
+        return clazz.getProtectionDomain()
                 .getCodeSource()
                 .getLocation()
                 .getPath()

@@ -39,7 +39,7 @@ public class VersionUtils {
             // Path to the .class file of the given class
             String classPath = clazz.getName().replace('.', '/') + ".class";
 
-            if (!JavaUtils.isRunningAsJarFile()) {
+            if (!JavaUtils.isRunningAsJarFile(clazz)) {
                 LogManager.getLogger().info("Failed to access pom.properties. Not running from a JAR file: " + file.getAbsolutePath());
                 return "VERSION NOT FOUND (Not running from JAR)";
             }
