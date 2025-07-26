@@ -38,6 +38,11 @@ public class VersionUtils {
             // Path to the .class file of the given class
             String classPath = clazz.getName().replace('.', '/') + ".class";
 
+            if (!file.getName().endsWith(".jar")) {
+                LogManager.getLogger().info("Failed to access pom.properties. Not running from a JAR file: " + file.getAbsolutePath());
+                return "VERSION NOT FOUND (Not running from JAR)";
+            }
+
             if(!file.exists() || !file.canRead()) {
                 LogManager.getLogger().warn("Failed to access pom.properties");
                 return "VERSION NOT FOUND";
