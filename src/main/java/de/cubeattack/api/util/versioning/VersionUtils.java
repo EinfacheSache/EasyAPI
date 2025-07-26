@@ -33,27 +33,32 @@ public class VersionUtils {
         try {
             // Path to the plugin's own JAR file
             URL jarUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
-            File jarFile = new File(jarUrl.toURI());
+            File file = new File(jarUrl.toURI());
 
             // Path to the .class file of the given class
             String classPath = clazz.getName().replace('.', '/') + ".class";
 
-            try (JarFile jar = new JarFile(jarFile)) {
+            if(!file.exists()){
+                LogManager.getLogger().warn("Failed to found pom.properties");
+                return "VERSION NOT FOUND";
+            }
+
+            try (JarFile jarFile = new JarFile(file)) {
                 // Ensure that this class is actually inside this JAR
-                if (jar.getEntry(classPath) == null) {
+                if (jarFile.getEntry(classPath) == null) {
                     LogManager.getLogger().warn("Class not found inside this JAR: " + classPath);
                     return null;
                 }
 
                 // Scan all pom.properties entries in META-INF/maven/
-                for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements(); ) {
+                for (Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
                     JarEntry entry = entries.nextElement();
                     String name = entry.getName();
 
                     if (!name.startsWith("META-INF/maven/") || !name.endsWith("pom.properties"))
                         continue;
 
-                    try (InputStream is = jar.getInputStream(entry)) {
+                    try (InputStream is = jarFile.getInputStream(entry)) {
                         Properties props = new Properties();
                         props.load(is);
 
