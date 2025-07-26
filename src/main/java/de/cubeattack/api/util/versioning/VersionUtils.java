@@ -41,12 +41,12 @@ public class VersionUtils {
 
             if (!JavaUtils.isRunningAsJarFile(clazz)) {
                 LogManager.getLogger().info("Failed to access pom.properties. Not running from a JAR file: " + file.getAbsolutePath());
-                return "VERSION NOT FOUND (Not running from JAR)";
+                return "NOT FOUND (Not running from JAR)";
             }
 
             if(!file.exists() || !file.canRead()) {
                 LogManager.getLogger().warn("Failed to access pom.properties");
-                return "VERSION NOT FOUND";
+                return "NOT FOUND (Can't access file)";
             }
 
             try (JarFile jarFile = new JarFile(file)) {
