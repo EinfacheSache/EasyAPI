@@ -38,8 +38,8 @@ public class VersionUtils {
             // Path to the .class file of the given class
             String classPath = clazz.getName().replace('.', '/') + ".class";
 
-            if(!file.exists()){
-                LogManager.getLogger().warn("Failed to found pom.properties");
+            if(!file.exists() || !file.canRead()) {
+                LogManager.getLogger().warn("Failed to access pom.properties");
                 return "VERSION NOT FOUND";
             }
 
