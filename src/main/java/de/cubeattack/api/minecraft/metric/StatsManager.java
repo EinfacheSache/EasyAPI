@@ -1,7 +1,7 @@
 package de.cubeattack.api.minecraft.metric;
 
 import com.google.gson.Gson;
-import de.cubeattack.api.API;
+import de.cubeattack.api.AsyncExecutor;
 import de.cubeattack.api.logger.LogManager;
 import de.cubeattack.api.shutdown.ShutdownHook;
 import okhttp3.*;
@@ -21,7 +21,7 @@ public class StatsManager {
 
     public static void runStatsUpdateSchedule(String ID, String address, StatsProvider statsProvider, long updatePeriodInSec) {
 
-        ScheduledFuture<?> future = API.getScheduledExecutorService().scheduleWithFixedDelay(new TimerTask() {
+        ScheduledFuture<?> future = AsyncExecutor.getService().scheduleWithFixedDelay(new TimerTask() {
             @Override
             public void run() {
                 RequestBody requestBody = RequestBody.create(new Gson().toJson(statsProvider.getStats()), MediaType.parse("application/json"));

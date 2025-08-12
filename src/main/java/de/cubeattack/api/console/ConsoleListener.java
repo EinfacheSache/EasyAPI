@@ -1,6 +1,6 @@
 package de.cubeattack.api.console;
 
-import de.cubeattack.api.API;
+import de.cubeattack.api.AsyncExecutor;
 import de.cubeattack.api.logger.LogManager;
 
 import java.io.BufferedReader;
@@ -24,7 +24,7 @@ public class ConsoleListener {
     }
 
     private void run() {
-        API.getScheduledExecutorService().submit(() -> {
+        AsyncExecutor.getService().submit(() -> {
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {

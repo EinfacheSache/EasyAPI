@@ -1,6 +1,6 @@
 package de.cubeattack.api.util;
 
-import de.cubeattack.api.API;
+import de.cubeattack.api.AsyncExecutor;
 import de.cubeattack.api.logger.LogManager;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.nio.file.StandardOpenOption;
 public class LogUtils {
 
     public static void write(Path path, String message) {
-        API.getExecutorService().submit(() -> {
+        AsyncExecutor.getService().submit(() -> {
             try {
 
                 if (path.getParent() != null) {

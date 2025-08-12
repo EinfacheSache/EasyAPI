@@ -1,6 +1,6 @@
 package de.cubeattack.api.util;
 
-import de.cubeattack.api.API;
+import de.cubeattack.api.AsyncExecutor;
 import de.cubeattack.api.logger.LogManager;
 import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;
 import org.bspfsystems.yamlconfiguration.configuration.InvalidConfigurationException;
@@ -10,17 +10,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
+@SuppressWarnings("unused")
 public class FileUtils
 {
-    private final YamlConfiguration configuration;
+    private final YamlConfiguration configuration = new YamlConfiguration();
     private final InputStream inputStream;
     private final String fileName;
-    private final File file;
+    private final Path path;
 
     public FileUtils(InputStream inputStream, String folder, String fileName) {
         this(inputStream, folder, fileName, false);
@@ -29,41 +32,51 @@ public class FileUtils
     public FileUtils(InputStream inputStream, String folder, String fileName, boolean skipLoading) {
         this.fileName = fileName;
         this.inputStream = inputStream;
-        this.configuration = new YamlConfiguration();
-        this.file = new File (folder +  "/" + fileName);
-        copyToFile(skipLoading);
-    }
+        this.path = Paths.get(folder).resolve(fileName);
 
-    public void reloadConfiguration() {
-        copyToFile(false);
-    }
-
-    private void copyToFile(boolean skipLoading) {
-        try {
-
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                Files.copy(inputStream, file.toPath());
-            }
-
-            if (!skipLoading) {
-                configuration.load(file);
-            }
-
-            LogManager.getLogger().info("The file " + fileName + " has been successfully loaded");
-
-        } catch (InvalidConfigurationException ex) {
-            LogManager.getLogger().error("Error whiles loading : " + fileName + " " + ex.getLocalizedMessage());
-        } catch (IOException ex) {
-            LogManager.getLogger().error("Error whiles creating : " + fileName + " " + ex.getLocalizedMessage());
+        ensureFileExists();
+        if (!skipLoading) {
+            loadFromDisk();
+            LogManager.getLogger().info("Loaded file: " + fileName);
+        } else {
+            LogManager.getLogger().info("File created (skipped load): " + fileName);
         }
     }
 
+    private void ensureFileExists() {
+        try {
+            Files.createDirectories(path.getParent());
+            if (!Files.exists(path)) {
+                try (InputStream in = this.inputStream) {
+                    if (in == null) {
+                        throw new IOException("InputStream is null for " + fileName);
+                    }
+                    Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        } catch (IOException ex) {
+            LogManager.getLogger().error("Error while ensuring file " + fileName, ex);
+        }
+    }
+
+    private void loadFromDisk() {
+        try {
+            configuration.load(path.toFile());
+        } catch (InvalidConfigurationException ex) {
+            LogManager.getLogger().error("Invalid YAML in " + fileName, ex);
+        } catch (IOException ex) {
+            LogManager.getLogger().error("I/O error while loading " + fileName, ex);
+        }
+    }
+
+    public void reloadConfiguration() {
+        AsyncExecutor.getService().submit(this::loadFromDisk);
+    }
 
     public void save() {
-       API.getExecutorService().submit(() -> {
+       AsyncExecutor.getService().submit(() -> {
             try {
-                configuration.save(file);
+                configuration.save(path.toFile());
             } catch (IOException ex) {
                 LogManager.getLogger().error("Error whiles saving " + fileName + " " + ex.getLocalizedMessage());
             }
@@ -145,7 +158,7 @@ public class FileUtils
         return fileName;
     }
     public File getFile() {
-        return file;
+        return path.toFile();
     }
 }
 

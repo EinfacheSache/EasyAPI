@@ -2,7 +2,7 @@ package de.cubeattack.api.util.version;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.cubeattack.api.API;
+import de.cubeattack.api.AsyncExecutor;
 import de.cubeattack.api.logger.LogManager;
 import de.cubeattack.api.util.JavaUtils;
 import de.cubeattack.api.util.RestAPIUtils;
@@ -173,7 +173,7 @@ public class VersionUtils {
 
         String savePath = "./plugins/" + pluginName + "-" + result.latestVersion + ".jar";
 
-        return API.getScheduledExecutorService().submit(() -> {
+        return AsyncExecutor.getService().submit(() -> {
 
             if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestUpdatedVersion;
 
