@@ -1,7 +1,7 @@
-package de.cubeattack.api.util;
+package de.einfachesache.api.util;
 
-import de.cubeattack.api.AsyncExecutor;
-import de.cubeattack.api.logger.LogManager;
+import de.einfachesache.api.AsyncExecutor;
+import de.einfachesache.api.logger.LogManager;
 import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;
 import org.bspfsystems.yamlconfiguration.configuration.InvalidConfigurationException;
 import org.bspfsystems.yamlconfiguration.file.YamlConfiguration;

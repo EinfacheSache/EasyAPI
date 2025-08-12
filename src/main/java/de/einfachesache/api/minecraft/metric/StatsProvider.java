@@ -1,4 +1,4 @@
-package de.cubeattack.api.minecraft.metric;
+package de.einfachesache.api.minecraft.metric;
 
 import org.jetbrains.annotations.NotNull;
 

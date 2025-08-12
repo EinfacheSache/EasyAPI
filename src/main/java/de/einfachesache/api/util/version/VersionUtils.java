@@ -1,11 +1,11 @@
-package de.cubeattack.api.util.version;
+package de.einfachesache.api.util.version;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.cubeattack.api.AsyncExecutor;
-import de.cubeattack.api.logger.LogManager;
-import de.cubeattack.api.util.JavaUtils;
-import de.cubeattack.api.util.RestAPIUtils;
+import de.einfachesache.api.AsyncExecutor;
+import de.einfachesache.api.logger.LogManager;
+import de.einfachesache.api.util.JavaUtils;
+import de.einfachesache.api.util.RestAPIUtils;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.yaml.snakeyaml.Yaml;

@@ -1,9 +1,9 @@
-package de.cubeattack.api.minecraft.metric;
+package de.einfachesache.api.minecraft.metric;
 
 import com.google.gson.Gson;
-import de.cubeattack.api.AsyncExecutor;
-import de.cubeattack.api.logger.LogManager;
-import de.cubeattack.api.shutdown.ShutdownHook;
+import de.einfachesache.api.AsyncExecutor;
+import de.einfachesache.api.logger.LogManager;
+import de.einfachesache.api.shutdown.ShutdownHook;
 import okhttp3.*;
 
 import java.io.IOException;

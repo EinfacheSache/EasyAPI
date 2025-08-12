@@ -1,6 +1,6 @@
-package de.cubeattack.api.logger;
+package de.einfachesache.api.logger;
 
-import de.cubeattack.api.util.JavaUtils;
+import de.einfachesache.api.util.JavaUtils;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;

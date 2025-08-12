@@ -1,4 +1,4 @@
-package de.cubeattack.api.console;
+package de.einfachesache.api.console;
 
 import java.util.Arrays;
 

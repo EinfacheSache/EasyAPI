@@ -1,4 +1,4 @@
-package de.cubeattack.api.util.version;
+package de.einfachesache.api.util.version;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -235,7 +235,7 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             Item item;
             for(Iterator<Item> var2 = this.iterator(); var2.hasNext(); buffer.append(item)) {
                 item = var2.next();
-                if (buffer.length() > 0) {
+                if (!buffer.isEmpty()) {
                     buffer.append(item instanceof ListItem ? '-' : '.');
                 }
             }
@@ -288,20 +288,16 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             if (item == null) {
                 return this.value == 0 ? 0 : 1;
             } else {
-                switch (item.getType()) {
-                    case 0:
-                    case 4:
-                        return -1;
-                    case 1:
-                        return 1;
-                    case 2:
-                        return 1;
-                    case 3:
-                        int itemValue = ((IntItem)item).value;
-                        return Integer.compare(this.value, itemValue);
-                    default:
-                        throw new IllegalStateException("invalid item: " + item.getClass());
-                }
+                return switch (item.getType()) {
+                    case 0, 4 -> -1;
+                    case 1 -> 1;
+                    case 2 -> 1;
+                    case 3 -> {
+                        int itemValue = ((IntItem) item).value;
+                        yield Integer.compare(this.value, itemValue);
+                    }
+                    default -> throw new IllegalStateException("invalid item: " + item.getClass());
+                };
             }
         }
 
@@ -374,18 +370,12 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             if (item == null) {
                 return comparableQualifier(this.value).compareTo(RELEASE_VERSION_INDEX);
             } else {
-                switch (item.getType()) {
-                    case 0:
-                    case 3:
-                    case 4:
-                        return -1;
-                    case 1:
-                        return comparableQualifier(this.value).compareTo(comparableQualifier(((StringItem)item).value));
-                    case 2:
-                        return -1;
-                    default:
-                        throw new IllegalStateException("invalid item: " + item.getClass());
-                }
+                return switch (item.getType()) {
+                    case 0, 3, 4 -> -1;
+                    case 1 -> comparableQualifier(this.value).compareTo(comparableQualifier(((StringItem) item).value));
+                    case 2 -> -1;
+                    default -> throw new IllegalStateException("invalid item: " + item.getClass());
+                };
             }
         }
 
@@ -436,21 +426,17 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             if (item == null) {
                 return this.value == 0L ? 0 : 1;
             } else {
-                switch (item.getType()) {
-                    case 0:
-                        return -1;
-                    case 1:
-                        return 1;
-                    case 2:
-                        return 1;
-                    case 3:
-                        return 1;
-                    case 4:
-                        long itemValue = ((LongItem)item).value;
-                        return Long.compare(this.value, itemValue);
-                    default:
-                        throw new IllegalStateException("invalid item: " + item.getClass());
-                }
+                return switch (item.getType()) {
+                    case 0 -> -1;
+                    case 1 -> 1;
+                    case 2 -> 1;
+                    case 3 -> 1;
+                    case 4 -> {
+                        long itemValue = ((LongItem) item).value;
+                        yield Long.compare(this.value, itemValue);
+                    }
+                    default -> throw new IllegalStateException("invalid item: " + item.getClass());
+                };
             }
         }
 
@@ -466,7 +452,7 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
         }
 
         public int hashCode() {
-            return (int)(this.value ^ this.value >>> 32);
+            return Long.hashCode(this.value);
         }
 
         public String toString() {
@@ -493,19 +479,13 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             if (item == null) {
                 return BigInteger.ZERO.equals(this.value) ? 0 : 1;
             } else {
-                switch (item.getType()) {
-                    case 0:
-                        return this.value.compareTo(((BigIntegerItem)item).value);
-                    case 1:
-                        return 1;
-                    case 2:
-                        return 1;
-                    case 3:
-                    case 4:
-                        return 1;
-                    default:
-                        throw new IllegalStateException("invalid item: " + item.getClass());
-                }
+                return switch (item.getType()) {
+                    case 0 -> this.value.compareTo(((BigIntegerItem) item).value);
+                    case 1 -> 1;
+                    case 2 -> 1;
+                    case 3, 4 -> 1;
+                    default -> throw new IllegalStateException("invalid item: " + item.getClass());
+                };
             }
         }
 

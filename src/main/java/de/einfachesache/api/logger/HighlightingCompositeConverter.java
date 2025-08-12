@@ -1,4 +1,4 @@
-package de.cubeattack.api.logger;
+package de.einfachesache.api.logger;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;

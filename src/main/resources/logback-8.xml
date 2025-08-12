@@ -3,9 +3,9 @@
 <configuration scan="true">
 
     <!-- Configure logger -->
-    <logger name="de.cubeattack" level="TRACE"/>
-    <conversionRule conversionWord="source" converterClass="de.cubeattack.api.logger.CustomClassOfCallerConverter"/>
-    <conversionRule conversionWord="logColor" converterClass="de.cubeattack.api.logger.HighlightingCompositeConverter"/>
+    <logger name="de.einfachesache" level="TRACE"/>
+    <conversionRule conversionWord="source" converterClass="de.einfachesache.api.logger.CustomClassOfCallerConverter"/>
+    <conversionRule conversionWord="logColor" converterClass="de.einfachesache.api.logger.HighlightingCompositeConverter"/>
 
     <!-- Appender Configuration [Console] -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

@@ -1,4 +1,4 @@
-package de.cubeattack.api.minecraft.metric;
+package de.einfachesache.api.minecraft.metric;
 
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
 public class StatsContainer {

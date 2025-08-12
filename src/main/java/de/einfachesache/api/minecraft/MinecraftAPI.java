@@ -1,8 +1,8 @@
-package de.cubeattack.api.minecraft;
+package de.einfachesache.api.minecraft;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.cubeattack.api.logger.LogManager;
+import de.einfachesache.api.logger.LogManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,7 +1,7 @@
-package de.cubeattack.api;
+package de.einfachesache.api;
 
-import de.cubeattack.api.logger.LogManager;
-import de.cubeattack.api.shutdown.ShutdownHook;
+import de.einfachesache.api.logger.LogManager;
+import de.einfachesache.api.shutdown.ShutdownHook;
 
 import java.util.concurrent.*;
 

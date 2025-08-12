@@ -1,4 +1,4 @@
-package de.cubeattack.api.util.version;
+package de.einfachesache.api.util.version;
 
 @FunctionalInterface
 public interface CallbackExecutable

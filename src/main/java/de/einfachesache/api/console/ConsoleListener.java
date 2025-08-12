@@ -1,7 +1,7 @@
-package de.cubeattack.api.console;
+package de.einfachesache.api.console;
 
-import de.cubeattack.api.AsyncExecutor;
-import de.cubeattack.api.logger.LogManager;
+import de.einfachesache.api.AsyncExecutor;
+import de.einfachesache.api.logger.LogManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

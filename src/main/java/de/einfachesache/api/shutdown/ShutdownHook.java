@@ -1,4 +1,4 @@
-package de.cubeattack.api.shutdown;
+package de.einfachesache.api.shutdown;
 
 @SuppressWarnings("unused")
 public class ShutdownHook

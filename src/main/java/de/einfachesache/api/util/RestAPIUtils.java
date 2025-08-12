@@ -1,6 +1,6 @@
-package de.cubeattack.api.util;
+package de.einfachesache.api.util;
 
-import de.cubeattack.api.logger.LogManager;
+import de.einfachesache.api.logger.LogManager;
 import okhttp3.*;
 
 import java.net.SocketException;
