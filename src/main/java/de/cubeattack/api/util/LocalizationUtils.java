@@ -1,4 +1,4 @@
-package de.cubeattack.api.language;
+package de.cubeattack.api.util;
 
 import de.cubeattack.api.logger.LogManager;
 
@@ -17,23 +17,23 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("unused")
-public class Localization {
+public class LocalizationUtils {
 
     private final String resourceBundlePrefix;
     private final Locale defaultLocale;
     private final ClassLoader loader;
 
-    public Localization(String resourceBundlePrefix, Locale defaultLocale) {
-        this(resourceBundlePrefix, defaultLocale, Localization.class.getClassLoader());
+    public LocalizationUtils(String resourceBundlePrefix, Locale defaultLocale) {
+        this(resourceBundlePrefix, defaultLocale, LocalizationUtils.class.getClassLoader());
     }
 
-    public Localization(String resourceBundlePrefix, Locale defaultLocale, ClassLoader loader) {
+    public LocalizationUtils(String resourceBundlePrefix, Locale defaultLocale, ClassLoader loader) {
         this.resourceBundlePrefix = resourceBundlePrefix;
         this.defaultLocale = defaultLocale;
         this.loader = loader;
     }
 
-    public Localization(String resourceBundlePrefix, Locale defaultLocale, File file) {
+    public LocalizationUtils(String resourceBundlePrefix, Locale defaultLocale, File file) {
         ClassLoader tempLoader;
         this.resourceBundlePrefix = resourceBundlePrefix;
         this.defaultLocale = defaultLocale;
@@ -41,7 +41,7 @@ public class Localization {
             tempLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
         } catch (MalformedURLException ex) {
             LogManager.getLogger().error(ex.getLocalizedMessage(), ex);
-            tempLoader = Localization.class.getClassLoader();
+            tempLoader = LocalizationUtils.class.getClassLoader();
         }
         this.loader = tempLoader;
     }
