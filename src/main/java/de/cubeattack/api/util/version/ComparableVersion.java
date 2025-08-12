@@ -1,4 +1,4 @@
-package de.cubeattack.api.util.versioning;
+package de.cubeattack.api.util.version;
 
 import java.math.BigInteger;
 import java.util.*;

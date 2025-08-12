@@ -1,4 +1,4 @@
-package de.cubeattack.api.util.versioning;
+package de.cubeattack.api.util.version;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -173,7 +173,7 @@ public class VersionUtils {
 
         String savePath = "./plugins/" + pluginName + "-" + result.latestVersion + ".jar";
 
-        return API.getExecutorService().submit(() -> {
+        return API.getScheduledExecutorService().submit(() -> {
 
             if (result.latestVersion.equalsIgnoreCase(latestUpdatedVersion)) return latestUpdatedVersion;
 

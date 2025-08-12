@@ -1,4 +1,4 @@
-package de.cubeattack.api.util.versioning;
+package de.cubeattack.api.util.version;
 
 @FunctionalInterface
 public interface CallbackExecutable
