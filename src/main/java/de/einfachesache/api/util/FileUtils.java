@@ -88,8 +88,13 @@ public class FileUtils {
     public CompletableFuture<Void> reloadConfigurationAsync() {
         return readyRef.updateAndGet(prev ->
                 prev.thenRunAsync(() -> {
-                    loadFromDisk();
-                    LogManager.getLogger().info("Reload file async: " + fileName);
+                    try {
+                        configuration.load(path.toFile());
+                        LogManager.getLogger().info("Reload file async: " + fileName);
+                    } catch (InvalidConfigurationException | IOException ex) {
+                        LogManager.getLogger().error("Failed to reload " + fileName, ex);
+                        throw new CompletionException(ex);
+                    }
                 }, AsyncExecutor.getService())
         );
     }
