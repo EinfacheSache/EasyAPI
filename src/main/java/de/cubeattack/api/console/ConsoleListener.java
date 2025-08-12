@@ -1,4 +1,4 @@
-package de.cubeattack.api.command;
+package de.cubeattack.api.console;
 
 import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
@@ -24,7 +24,7 @@ public class ConsoleListener {
     }
 
     private void run() {
-        API.getExecutorService().submit(() -> {
+        API.getScheduledExecutorService().submit(() -> {
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {

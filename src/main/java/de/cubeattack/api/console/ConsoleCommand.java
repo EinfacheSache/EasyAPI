@@ -1,4 +1,4 @@
-package de.cubeattack.api.command;
+package de.cubeattack.api.console;
 
 import java.util.Arrays;
 
