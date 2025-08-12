@@ -15,10 +15,6 @@ import java.util.stream.Collectors;
 public class MinecraftAPI
 {
 
-    public static void main(String[] args) {
-        System.out.print(loadUUID("EinfacheSache"));
-    }
-
     public static UUID loadUUID(String playerName) {
         String url = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
 
