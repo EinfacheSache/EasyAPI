@@ -16,10 +16,14 @@ import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("unused")
-public class FileUtils
-{
+public class FileUtils {
+
+    private final AtomicReference<CompletableFuture<Void>> readyRef = new AtomicReference<>(CompletableFuture.completedFuture(null));
     private final YamlConfiguration configuration = new YamlConfiguration();
     private final InputStream inputStream;
     private final String fileName;
@@ -69,21 +73,37 @@ public class FileUtils
         }
     }
 
+
+    /**
+     * Synchronously reloads the file from disk (blocking I/O).
+     * Prefer {@link #reloadConfigurationAsync()} for non-blocking usage.
+     *
+     * @deprecated since 1.1 – use {@link #reloadConfigurationAsync()}.
+     */
     public void reloadConfiguration() {
-        AsyncExecutor.getService().submit(()->{
-            loadFromDisk();
-            LogManager.getLogger().info("Reloaded file: " + fileName);
-        });
+        loadFromDisk();
+        LogManager.getLogger().info("Reload file: " + fileName);
     }
 
-    public void save() {
-       AsyncExecutor.getService().submit(() -> {
-            try {
-                configuration.save(path.toFile());
-            } catch (IOException ex) {
-                LogManager.getLogger().error("Error whiles saving " + fileName + " " + ex.getLocalizedMessage());
-            }
-        });
+    public CompletableFuture<Void> reloadConfigurationAsync() {
+        return readyRef.updateAndGet(prev ->
+                prev.thenRunAsync(() -> {
+                    loadFromDisk();
+                    LogManager.getLogger().info("Reload file async: " + fileName);
+                }, AsyncExecutor.getService())
+        );
+    }
+
+    public CompletableFuture<Void> saveAsync() {
+        return readyRef.updateAndGet(prev ->
+                prev.thenRunAsync(() -> {
+                    try {
+                        configuration.save(path.toFile());
+                    } catch (IOException ex) {
+                        throw new CompletionException(ex);
+                    }
+                }, AsyncExecutor.getService())
+        );
     }
 
     public void remove(String path) {
@@ -97,53 +117,68 @@ public class FileUtils
     public String get(String path) {
         return this.getConfig().getString(path);
     }
+
     public int getInt(String path) {
         return this.getConfig().getInt(path);
     }
+
     public boolean getBoolean(String path) {
         return this.getConfig().getBoolean(path);
     }
+
     public double getDouble(String path) {
         return this.getConfig().getDouble(path);
     }
+
     public long getLong(String path) {
         return this.getConfig().getLong(path);
     }
+
     public Object getObject(String path) {
         return this.getConfig().get(path);
     }
+
     public Map<String, Object> getMap(String path, boolean deep) {
         var section = getConfig().getConfigurationSection(path);
         return section == null ? Collections.emptyMap() : section.getValues(deep);
     }
+
     public List<?> getList(String path) {
         return this.getConfig().getList(path);
     }
+
     public List<String> getStringList(String path) {
         return this.getConfig().getStringList(path);
     }
-    public List<Map<?,?>> getMapList(String path) {
+
+    public List<Map<?, ?>> getMapList(String path) {
         return this.getConfig().getMapList(path);
     }
 
     public String get(String path, String def) {
         return this.getConfig().getString(path, def);
     }
+
     public int getInt(String path, int def) {
         return this.getConfig().getInt(path, def);
     }
+
     public boolean getBoolean(String path, boolean def) {
         return this.getConfig().getBoolean(path, def);
     }
+
     public double getDouble(String path, double def) {
         return this.getConfig().getDouble(path, def);
     }
+
     public long getLong(String path, long def) {
         return this.getConfig().getLong(path, def);
     }
+
     public Object getObject(String path, Object def) {
         return this.getConfig().get(path, def);
     }
+
     public List<?> getList(String path, List<?> def) {
         return this.getConfig().getList(path, def);
     }
@@ -151,15 +186,19 @@ public class FileUtils
     public ConfigurationSection getConfigurationSection(String path) {
         return this.getConfig().getConfigurationSection(path);
     }
+
     public YamlConfiguration getConfig() {
         return configuration;
     }
+
     public InputStream getInput() {
         return inputStream;
     }
+
     public String getFileName() {
         return fileName;
     }
+
     public File getFile() {
         return path.toFile();
     }
