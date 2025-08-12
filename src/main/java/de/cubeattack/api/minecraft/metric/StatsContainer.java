@@ -1,7 +1,7 @@
-package de.cubeattack.api.minecraft.stats;
+package de.cubeattack.api.minecraft.metric;
 
 @SuppressWarnings({"unused", "FieldMayBeFinal"})
-public class Stats {
+public class StatsContainer {
 
     private String serverType;
     private String serverVersion;
@@ -23,11 +23,11 @@ public class Stats {
     private boolean onlineMode;
     private boolean proxyProtocol;
 
-    public Stats(){
+    public StatsContainer(){
         this.playerAmount = 0;
     }
 
-    public Stats(String serverType, String serverVersion, String serverName, String javaVersion, String osName, String osArch, String osVersion, String pluginVersion, String versionStatus, String versionError, String updateSetting, String neoProtectPlan, int playerAmount, int managedServers, int coreCount, boolean onlineMode, boolean proxyProtocol) {
+    public StatsContainer(String serverType, String serverVersion, String serverName, String javaVersion, String osName, String osArch, String osVersion, String pluginVersion, String versionStatus, String versionError, String updateSetting, String neoProtectPlan, int playerAmount, int managedServers, int coreCount, boolean onlineMode, boolean proxyProtocol) {
         this.serverType = serverType.toLowerCase();
         this.serverVersion = serverVersion;
         this.serverName = serverName;

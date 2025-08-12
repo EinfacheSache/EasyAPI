@@ -1,15 +1,17 @@
-package de.cubeattack.api.minecraft.stats;
+package de.cubeattack.api.minecraft.metric;
 
 import com.google.gson.Gson;
+import de.cubeattack.api.API;
 import de.cubeattack.api.logger.LogManager;
 import de.cubeattack.api.shutdown.ShutdownHook;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class StatsManager {
@@ -17,15 +19,12 @@ public class StatsManager {
     private static final OkHttpClient client = new OkHttpClient();
     private static final String statsServer = "https://metrics.einfachesache.de/api/stats/plugin";
 
-    public static void runStatsUpdateSchedule(String ID, String address, StatsProvider stats, long updatePeriodInSec) {
+    public static void runStatsUpdateSchedule(String ID, String address, StatsProvider statsProvider, long updatePeriodInSec) {
 
-        LogManager.getLogger().info("StatsUpdate scheduler started");
-
-        Timer statsUpdateTimer = new Timer();
-        statsUpdateTimer.schedule(new TimerTask() {
+        ScheduledFuture<?> future = API.getScheduledExecutorService().scheduleWithFixedDelay(new TimerTask() {
             @Override
             public void run() {
-                RequestBody requestBody = RequestBody.create(new Gson().toJson(stats.getStats()), MediaType.parse("application/json"));
+                RequestBody requestBody = RequestBody.create(new Gson().toJson(statsProvider.getStats()), MediaType.parse("application/json"));
                 int code = updateStats(requestBody, String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
                 if(code == 200)
                     LogManager.getLogger().debug("Request to update stats was successful");
@@ -33,10 +32,10 @@ public class StatsManager {
                     LogManager.getLogger().warn("Request to update stats failed (error-code: " + code + ")");
                 }
             }
-        }, 1000, 1000 * updatePeriodInSec);
+        }, 1, updatePeriodInSec, TimeUnit.SECONDS);
 
         ShutdownHook.register(() -> {
-            statsUpdateTimer.cancel();
+            future.cancel(true);
             int code = sendOfflineStatus(String.valueOf(UUID.nameUUIDFromBytes((ID + ":" + address).getBytes(StandardCharsets.UTF_8))));
             if(code == 302)
                 LogManager.getLogger().info("Request to send shutdown status to stats server was successful");
@@ -44,6 +43,8 @@ public class StatsManager {
                 LogManager.getLogger().warn("Request to send shutdown status to stats server failed (error-code: " + code + ")");
             }
         });
+
+        LogManager.getLogger().info("StatsUpdate scheduler started");
 
     }
 

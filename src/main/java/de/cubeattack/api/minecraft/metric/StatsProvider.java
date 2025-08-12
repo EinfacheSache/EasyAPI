@@ -1,9 +1,9 @@
-package de.cubeattack.api.minecraft.stats;
+package de.cubeattack.api.minecraft.metric;
 
 import org.jetbrains.annotations.NotNull;
 
 public interface StatsProvider {
 
     @NotNull
-    Stats getStats();
+    StatsContainer getStats();
 }
