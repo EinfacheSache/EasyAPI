@@ -70,7 +70,10 @@ public class FileUtils
     }
 
     public void reloadConfiguration() {
-        AsyncExecutor.getService().submit(this::loadFromDisk);
+        AsyncExecutor.getService().submit(()->{
+            loadFromDisk();
+            LogManager.getLogger().info("Reloaded file: " + fileName);
+        });
     }
 
     public void save() {
