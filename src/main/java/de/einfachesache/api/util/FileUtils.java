@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicReference;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class FileUtils {
 
     private final AtomicReference<CompletableFuture<Void>> readyRef = new AtomicReference<>(CompletableFuture.completedFuture(null));
@@ -109,6 +109,11 @@ public class FileUtils {
                     }
                 }, AsyncExecutor.getService())
         );
+    }
+
+    public void saveAsync(String key, Object value) {
+        this.getConfig().set(key, value);
+        this.saveAsync();
     }
 
     public void remove(String path) {
