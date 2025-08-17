@@ -5,6 +5,8 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE.md)
 [![JitPack](https://img.shields.io/jitpack/version/com.github.EinfacheSache/EasyAPI?label=release&logo=apachemaven&color=blue)](https://jitpack.io/#EinfacheSache/EasyAPI)
 
+🌍 Available Languages: [English](README.md) | [Deutsch](README.de.md)
+
 ---
 
 ## 📦 Dependency (JitPack)
