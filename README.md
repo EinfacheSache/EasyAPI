@@ -14,8 +14,8 @@
 
 <dependencies>
     <dependency>
-        <groupId>com.github.CubeAttack</groupId>
-        <artifactId>EasyAPI</artifactId>
+        <groupId>com.github.EinfacheSache</groupId>
+        <artifactId>easyapi</artifactId>
         <version>VERSION</version>
     </dependency>
 </dependencies>
