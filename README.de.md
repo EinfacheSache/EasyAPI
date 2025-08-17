@@ -3,6 +3,7 @@
 [![Java 21](https://img.shields.io/badge/Java-21-red?logo=openjdk)](https://openjdk.org/)
 [![Build with Maven](https://img.shields.io/badge/Build-Maven-orange?logo=apachemaven)](https://maven.apache.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE.md)
+[![](https://jitpack.io/v/CubeAttack/EasyAPI.svg)](https://jitpack.io/#CubeAttack/EasyAPI)
 
 🌍 Verfügbare Sprachen: [English](README.md) | [Deutsch](README.de.md)
 
