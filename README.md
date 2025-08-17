@@ -1,10 +1,10 @@
 # EasyAPI
 
-[![Java 17](https://img.shields.io/badge/Java-17-red?logo=openjdk)](https://openjdk.org/)
+[![Java 21](https://img.shields.io/badge/Java-21-red?logo=openjdk)](https://openjdk.org/)
 [![Build with Maven](https://img.shields.io/badge/Build-Maven-orange?logo=apachemaven)](https://maven.apache.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE.md)
 
-🌍 Available Languages: [English](README.md) | [Deutsch](README_DE.md)
+🌍 Available Languages: [English](README.md) | [Deutsch](README.de.md)
 
 ---
 
@@ -13,12 +13,13 @@
 **EasyAPI** is a lightweight and general-purpose Java library.  
 It provides helpers for **async execution**, **logging**, **REST HTTP calls**, **file/YAML utilities**, **runtime metrics**, **version utilities**, a small **console command framework**, and **Minecraft utilities** (e.g., Mojang UUID lookup).
 
-> Project setup: **Java 17**, **Maven**, **Apache-2.0** license  
+> Project setup: **Java 21**, **Maven**, **Apache-2.0** license  
 > Maven coordinates: `de.cubeattack:api:1.0`
 
 ---
 
 ## 📦 Dependency
+<a id="dependency"></a>
 
 If you use **JitPack**, add this to your `pom.xml`:
 
@@ -53,6 +54,7 @@ If you use **JitPack**, add this to your `pom.xml`:
 
 ---
 
+<a id="features"></a>
 ## 🚀 Features
 - **AsyncExecutor** — lightweight scheduler with `safe()` wrapper for error handling.
 - **Logging** — Logback/SLF4J bridge with custom converters.
@@ -65,12 +67,14 @@ If you use **JitPack**, add this to your `pom.xml`:
 
 ---
 
+<a id="requirements"></a>
 ## ⚙ Requirements
-- Java 17+
+- Java 21+
 - Maven 3.9+
 
 ---
 
+<a id="installation"></a>
 ## 🔧 Installation
 
 ### Option A: Build locally
@@ -80,10 +84,11 @@ mvn clean install
 Then depend on `de.cubeattack:api:1.0`.
 
 ### Option B: Use via JitPack
-See the [Dependency](#-dependency) section above.
+See the [Dependency](#dependency) section above.
 
 ---
 
+<a id="usage-examples"></a>
 ## 💻 Usage Examples
 
 ### Async tasks
@@ -113,6 +118,7 @@ System.out.println(id);
 
 ---
 
+<a id="modules--packages"></a>
 ## 📂 Modules / Packages
 - `de.einfachesache.api` — core utilities
 - `de.einfachesache.api.console` — console framework
@@ -123,14 +129,16 @@ System.out.println(id);
 
 ---
 
+<a id="build-from-source"></a>
 ## 🏗 Build from Source
 ```bash
 mvn clean package
-# Output: target/api-1.0.jar
+# Output: target/EasyAPI-1.0-SNAPSHOT.jar
 ```
 
 ---
 
+<a id="dependencies"></a>
 ## 📦 Dependencies
 Declared in `pom.xml`:
 - `com.google.code.gson:gson`
@@ -140,8 +148,8 @@ Declared in `pom.xml`:
 - `com.squareup.okhttp3:okhttp` *(scope: provided)*
 - `commons-io:commons-io` *(scope: provided)*
 
-
 ---
 
+<a id="license"></a>
 ## 📜 License
 Apache-2.0 — see [LICENSE.md](LICENSE.md)
