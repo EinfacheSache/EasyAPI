@@ -2,16 +2,25 @@
 
 [![Java 17](https://img.shields.io/badge/Java-17-red?logo=openjdk)](https://openjdk.org/)
 [![Build with Maven](https://img.shields.io/badge/Build-Maven-orange?logo=apachemaven)](https://maven.apache.org/)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE.md)
-[![JitPack](https://img.shields.io/jitpack/version/com.github.EinfacheSache/EasyAPI?label=release&logo=apachemaven&color=blue)](https://jitpack.io/#EinfacheSache/EasyAPI)
+[![License: Apache-2.0](https://img.shields.io/badge/Lizenz-Apache_2.0-blue.svg)](LICENSE.md)
 
-🌍 Available Languages: [English](README.md) | [Deutsch](README.de.md)
+🌍 Verfügbare Sprachen: [English](README.md) | [Deutsch](README.de.md)
 
 ---
 
-## 📦 Dependency (JitPack)
+# EasyAPI
 
-Füge folgendes zu deinem `pom.xml` hinzu, um EasyAPI über **JitPack** zu nutzen:
+**EasyAPI** ist eine leichte, allgemeine Java-Bibliothek.  
+Sie bietet Helfer für **asynchrone Ausführung**, **Logging**, **REST-HTTP-Aufrufe**, **Datei/YAML-Utilities**, **Laufzeit-Metriken**, **Versions-Utilities**, ein kleines **Konsolen-Command-Framework** und **Minecraft-Utilities** (z. B. Mojang-UUID-Lookup).
+
+> Projektumgebung: **Java 17**, **Maven**, **Apache-2.0** Lizenz  
+> Maven-Koordinaten: `de.cubeattack:api:1.0`
+
+---
+
+## 📦 Dependency
+
+Wenn du **JitPack** nutzt, füge Folgendes zu deiner `pom.xml` hinzu:
 
 ```xml
 <repositories>
@@ -32,85 +41,62 @@ Füge folgendes zu deinem `pom.xml` hinzu, um EasyAPI über **JitPack** zu nutze
 
 ---
 
-## Überblick
-
-**EasyAPI** ist eine **leichte, allgemeine Java-Bibliothek**.  
-Sie bietet Hilfen für:
-
-- **Asynchrone Ausführung**
-- **Logging** (Logback/SLF4J-Bridge mit Custom-Konvertern)
-- **REST-HTTP** (OkHttp)
-- **Datei & YAML-Utilities**
-- **Laufzeit-Metriken**
-- **Versions-Vergleich & Update-Helfer**
-- **Kleines Konsolen-Command-Framework**
-- **Minecraft-Utilities** (z. B. Mojang-UUID-Lookup)
-
-> Deklariert im Projekt: **Java 17**, **Maven**, **Apache-2.0** Lizenz.  
-> Maven-Koordinaten: **`de.cubeattack:easyapi:1.0`** (aus `pom.xml`).
-
----
-
-## Inhaltsverzeichnis
+## 📋 Inhaltsverzeichnis
 - [Funktionen](#funktionen)
 - [Voraussetzungen](#voraussetzungen)
 - [Installation](#installation)
-- [Beispiele](#beispiele)
+- [Beispielnutzung](#beispielnutzung)
 - [Module / Packages](#module--packages)
-- [Build aus Source](#build-aus-source)
+- [Build aus Quellcode](#build-aus-quellcode)
 - [Abhängigkeiten](#abhängigkeiten)
 - [Lizenz](#lizenz)
 
 ---
 
-## Funktionen
-
-- **AsyncExecutor** — geplanter Executor & `safe()`-Wrapper zum Fehlerfangen
-- **Logging** — Logback-Konfiguration (Java 8/17), Custom-Konverter, SLF4J-Bridge
-- **REST-Utilities** — OkHttp-Client mit Timeout & GET/POST/DELETE-Helpern
-- **Dateien & YAML** — Utils für Configs/Resourcen
-- **Runtime-Metriken** — Speicher/CPU/Runtime-Utils, kleiner Stats-Manager
-- **Versions-Utils** — Vergleich/Parsing & Update-Check
-- **Konsolen-Commands** — Framework zum Registrieren/Ausführen
-- **Minecraft** — Name→UUID-Lookup via Mojang
-
-Alle Features befinden sich unter `src/main/java/de/einfachesache/api/*`.
+## 🚀 Funktionen
+- **AsyncExecutor** — leichter Scheduler mit `safe()`-Wrapper für Fehlerbehandlung.
+- **Logging** — Logback/SLF4J-Bridge mit Custom-Konvertern.
+- **REST-Utilities** — OkHttp-Wrapper mit GET/POST/DELETE.
+- **Dateien & YAML** — Lese/Schreib-Helfer.
+- **Laufzeit-Metriken** — Speicher/CPU/Runtime-Überwachung.
+- **Versions-Utils** — Versionsvergleich und Update-Prüfung.
+- **Konsolen-Befehle** — minimales Framework zur Command-Registrierung.
+- **Minecraft** — Mojang UUID/Name Lookup.
 
 ---
 
-## Voraussetzungen
-
-- **Java:** 17+
-- **Build:** Maven 3.9+
+## ⚙ Voraussetzungen
+- Java 17+
+- Maven 3.9+
 
 ---
 
-## Installation
+## 🔧 Installation
 
 ### Variante A: Lokal bauen
 ```bash
-mvn -B -V clean install
-# Danach nutzbar als Dependency: de.cubeattack:easyapi:1.0
+mvn clean install
 ```
+Danach: `de.cubeattack:api:1.0` als Dependency einbinden.
 
 ### Variante B: Über JitPack
-(siehe [📦 Dependency (JitPack)](#-dependency-jitpack))
+Siehe [Dependency](#-dependency).
 
 ---
 
-## Beispiele
+## 💻 Beispielnutzung
 
-### Async-Task
+### Async-Tasks
 ```java
 AsyncExecutor.getService().schedule(
     AsyncExecutor.safe(() -> {
-        // dein async Code
+        // async Code hier
     }),
     1, java.util.concurrent.TimeUnit.SECONDS
 );
 ```
 
-### REST-Request
+### REST-Requests
 ```java
 RestAPIUtils http = new RestAPIUtils();
 var res = http.request("GET", "https://example.com/api", null);
@@ -119,7 +105,7 @@ if (res != null && res.isSuccessful()) {
 }
 ```
 
-### Minecraft UUID per Name
+### Minecraft UUID Lookup
 ```java
 UUID id = MinecraftAPI.getUUID("Notch");
 System.out.println(id);
@@ -127,42 +113,34 @@ System.out.println(id);
 
 ---
 
-## Module / Packages
-
-- `de.einfachesache.api` — Core (AsyncExecutor, ShutdownHook)
-- `de.einfachesache.api.console` — Konsolen-Command-System
-- `de.einfachesache.api.logger` — LogManager + Konverter
-- `de.einfachesache.api.minecraft` — MinecraftAPI + metric (Stats*)
-- `de.einfachesache.api.util` — File/Java/Log/REST/Runtime-Utils
-- `de.einfachesache.api.util.version` — VersionUtils, ComparableVersion
-
-Ressourcen:
-- `src/main/resources/logback-8.xml`
-- `src/main/resources/logback-17.xml`
+## 📂 Module / Packages
+- `de.einfachesache.api` — Core Utilities
+- `de.einfachesache.api.console` — Konsolen-Framework
+- `de.einfachesache.api.logger` — Logging
+- `de.einfachesache.api.minecraft` — Minecraft-Utils
+- `de.einfachesache.api.util` — Utils (Dateien, Runtime, REST, usw.)
+- `de.einfachesache.api.util.version` — Versionsvergleich
 
 ---
 
-## Build aus Source
+## 🏗 Build aus Quellcode
 ```bash
-mvn -B -V clean package
-# Output: target/easyapi-1.0.jar
+mvn clean package
+# Output: target/api-1.0.jar
 ```
 
 ---
 
-## Abhängigkeiten
-
-Aus `pom.xml`:
-
-- `com.google.code.gson:gson:2.13.1`
-- `ch.qos.logback:logback-classic:1.4.12` *(scope: provided)*
-- `org.slf4j:slf4j-simple:2.0.13`
-- `org.bspfsystems:yamlconfiguration:2.0.1`
-- `com.squareup.okhttp3:okhttp:5.0.0-alpha.14` *(scope: provided)*
-- `commons-io:commons-io:2.15.1` *(scope: provided)*
-- `org.apache.maven.plugins:maven-compiler-plugin:3.12.1` *(scope: provided)*
+## 📦 Abhängigkeiten
+Declared in `pom.xml`:
+- `com.google.code.gson:gson`
+- `ch.qos.logback:logback-classic` *(scope: provided)*
+- `org.slf4j:slf4j-simple`
+- `org.bspfsystems:yamlconfiguration`
+- `com.squareup.okhttp3:okhttp` *(scope: provided)*
+- `commons-io:commons-io` *(scope: provided)*
 
 ---
 
-## Lizenz
-Apache-2.0 — siehe [LICENSE.md](LICENSE.md).
+## 📜 Lizenz
+Apache-2.0 — siehe [LICENSE.md](LICENSE.md)
