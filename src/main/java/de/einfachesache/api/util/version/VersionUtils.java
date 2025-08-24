@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 import de.einfachesache.api.AsyncExecutor;
 import de.einfachesache.api.logger.LogManager;
 import de.einfachesache.api.util.JavaUtils;
-import de.einfachesache.api.util.RestAPIUtils;
+import de.einfachesache.api.util.rest.RestAPIUtils;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.yaml.snakeyaml.Yaml;
@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -228,7 +229,7 @@ public class VersionUtils {
 
             try {
                 file = new File(fileName);
-                url = new URL(downloadURL);
+                url = new URI(downloadURL).toURL();
 
                 if (!file.exists()) {
                     file.getParentFile().mkdirs();

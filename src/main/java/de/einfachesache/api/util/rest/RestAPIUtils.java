@@ -1,4 +1,4 @@
-package de.einfachesache.api.util;
+package de.einfachesache.api.util.rest;
 
 import de.einfachesache.api.logger.LogManager;
 import okhttp3.*;

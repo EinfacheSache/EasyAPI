@@ -97,6 +97,11 @@
             <version>5.0.0-alpha.14</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250517</version>
+        </dependency>
 
         <!-- Needed for Building -->
         <dependency>
