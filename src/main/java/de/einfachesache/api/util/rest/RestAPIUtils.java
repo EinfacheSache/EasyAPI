@@ -16,29 +16,29 @@ public class RestAPIUtils {
             .readTimeout(10, TimeUnit.SECONDS)
             .build();
 
-    public Response request(String methode, String url, RequestBody requestBody){
-        if(methode.startsWith("GET")){
+    public Response request(String methode, String url, RequestBody requestBody) {
+        if (methode.startsWith("GET")) {
             return callRequest(defaultBuilder().url(url).build());
-        }else if(methode.startsWith("POST")) {
+        } else if (methode.startsWith("POST")) {
             return callRequest(defaultBuilder().url(url).post(requestBody).build());
-        }else {
+        } else {
             return callRequest(defaultBuilder().url(url).delete().build());
         }
     }
 
-    private Response callRequest(Request request){
+    private Response callRequest(Request request) {
         try {
             return client.newCall(request).execute();
-        }catch (UnknownHostException | SocketTimeoutException | SocketException connectionException){
-            LogManager.getLogger().error( request + " failed cause (" + connectionException + ")");
+        } catch (UnknownHostException | SocketTimeoutException | SocketException connectionException) {
+            LogManager.getLogger().error(request + " failed cause (" + connectionException + ")");
             return new Response.Builder().request(request).protocol(Protocol.HTTP_2).code(500).message(connectionException.getMessage()).build();
-        } catch (Exception exception){
-            LogManager.getLogger().error( request + " failed cause (" + exception + ")");
+        } catch (Exception exception) {
+            LogManager.getLogger().error(request + " failed cause (" + exception + ")");
         }
         return null;
     }
 
-    private Request.Builder defaultBuilder(){
+    private Request.Builder defaultBuilder() {
         return new Request.Builder()
                 .addHeader("accept", "*/*")
                 .addHeader("Content-Type", "application/json");
