@@ -15,7 +15,7 @@
 Sie bietet Helfer für **asynchrone Ausführung**, **Logging**, **REST‑HTTP‑Aufrufe**, **Datei-/YAML‑Utilities**, **Laufzeitmetriken**, **Versions‑Utilities**, ein kleines **Konsolen‑Command‑Framework** sowie **Minecraft‑Utilities** (z. B. Mojang‑UUID‑Lookup).
 
 > Projekt-Setup: **Java 21**, **Maven**, **Apache‑2.0**‑Lizenz  
-> Maven‑Koordinaten: `de.cubeattack:api:1.0`
+> Maven‑Koordinaten: `de.einfachesache:api:1.0`
 
 ---
 
