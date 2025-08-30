@@ -9,6 +9,7 @@ import org.bspfsystems.yamlconfiguration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,17 +26,17 @@ public class FileUtils {
 
     private final AtomicReference<CompletableFuture<Void>> readyRef = new AtomicReference<>(CompletableFuture.completedFuture(null));
     private final YamlConfiguration configuration = new YamlConfiguration();
-    private final InputStream inputStream;
     private final String fileName;
+    private final URL inputURL;
     private final Path path;
 
-    public FileUtils(InputStream inputStream, String folder, String fileName) {
-        this(inputStream, folder, fileName, false);
+    public FileUtils(URL inputURL, String folder, String fileName) {
+        this(inputURL, folder, fileName, false);
     }
 
-    public FileUtils(InputStream inputStream, String folder, String fileName, boolean skipLoading) {
+    public FileUtils(URL inputURL, String folder, String fileName, boolean skipLoading) {
         this.fileName = fileName;
-        this.inputStream = inputStream;
+        this.inputURL = inputURL;
         this.path = Paths.get(folder).resolve(fileName);
 
         ensureFileExists();
@@ -51,7 +52,7 @@ public class FileUtils {
         try {
             Files.createDirectories(path.getParent());
             if (!Files.exists(path)) {
-                try (InputStream in = this.inputStream) {
+                try (InputStream in = this.inputURL.openStream()) {
                     if (in == null) {
                         throw new IOException("InputStream is null for " + fileName);
                     }
@@ -202,8 +203,8 @@ public class FileUtils {
         return configuration;
     }
 
-    public InputStream getInput() {
-        return inputStream;
+    public URL getInput() {
+        return inputURL;
     }
 
     public String getFileName() {
