@@ -40,7 +40,7 @@ public class FileUtils {
 
         ensureFileExists();
         if (!skipLoading) {
-            loadFromDisk();
+            loadConfigurationFromDisk();
             LogManager.getLogger().info("Loaded file: " + fileName);
         } else {
             LogManager.getLogger().info("File created (skipped load): " + fileName);
@@ -63,7 +63,7 @@ public class FileUtils {
         }
     }
 
-    private void loadFromDisk() {
+    private void loadConfigurationFromDisk() {
         try {
             configuration.load(path.toFile());
         } catch (InvalidConfigurationException ex) {
@@ -73,7 +73,6 @@ public class FileUtils {
         }
     }
 
-
     /**
      * Synchronously reloads the file from disk (blocking I/O).
      * Prefer {@link #reloadConfigurationAsync()} for non-blocking usage.
@@ -81,13 +80,15 @@ public class FileUtils {
      * @deprecated since 1.1 – use {@link #reloadConfigurationAsync()}.
      */
     public void reloadConfiguration() {
-        loadFromDisk();
+        ensureFileExists();
+        loadConfigurationFromDisk();
         LogManager.getLogger().info("Reload file: " + fileName);
     }
 
     public CompletableFuture<Void> reloadConfigurationAsync() {
         return readyRef.updateAndGet(prev ->
                 prev.thenRunAsync(() -> {
+                    ensureFileExists();
                     try {
                         configuration.load(path.toFile());
                         LogManager.getLogger().info("Reload file async: " + fileName);
