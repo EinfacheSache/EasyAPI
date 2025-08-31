@@ -76,6 +76,7 @@
             <version>1.5.13</version>  <!-- previous version: 1.4.12 -->
             <scope>provided</scope>
         </dependency>
+
         <!-- Needed for Console output) -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -107,7 +108,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.15.1</version>
+            <version>2.20.0</version> <!-- previous version: 2.15.1 -->
             <scope>provided</scope>
         </dependency>
     </dependencies>
