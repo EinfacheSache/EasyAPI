@@ -138,6 +138,10 @@ public class FileUtils {
         return this.getConfig().getBoolean(path);
     }
 
+    public float getFloat(String path) {
+        return this.getConfig().getFloat(path);
+    }
+
     public double getDouble(String path) {
         return this.getConfig().getDouble(path);
     }
@@ -177,6 +181,10 @@ public class FileUtils {
 
     public boolean getBoolean(String path, boolean def) {
         return this.getConfig().getBoolean(path, def);
+    }
+
+    public float getFloat(String path, float def) {
+        return this.getConfig().getFloat(path, def);
     }
 
     public double getDouble(String path, double def) {
