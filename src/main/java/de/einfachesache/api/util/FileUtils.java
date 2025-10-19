@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
@@ -95,7 +94,6 @@ public class FileUtils {
                         LogManager.getLogger().info("Reload file async: " + fileName);
                     } catch (InvalidConfigurationException | IOException ex) {
                         LogManager.getLogger().error("Failed to reload " + fileName, ex);
-                        throw new CompletionException(ex);
                     }
                 }, AsyncExecutor.getService())
         );
@@ -107,7 +105,7 @@ public class FileUtils {
                     try {
                         configuration.save(path.toFile());
                     } catch (IOException ex) {
-                        throw new CompletionException(ex);
+                        LogManager.getLogger().error("Failed to save " + fileName, ex);
                     }
                 }, AsyncExecutor.getService())
         );
