@@ -85,30 +85,45 @@ public class FileUtils {
         LogManager.getLogger().info("Reload file: " + fileName);
     }
 
-    public CompletableFuture<Void> reloadConfigurationAsync() {
-        return readyRef.updateAndGet(prev ->
+    public CompletableFuture<Boolean> reloadConfigurationAsync() {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        readyRef.updateAndGet(prev ->
                 prev.thenRunAsync(() -> {
-                    ensureFileExists();
+                    boolean ok;
                     try {
+                        ensureFileExists();
                         configuration.load(path.toFile());
                         LogManager.getLogger().info("Reload file async: " + fileName);
+                        ok = true;
                     } catch (InvalidConfigurationException | IOException ex) {
                         LogManager.getLogger().error("Failed to reload " + fileName, ex);
+                        ok = false;
                     }
+                    result.complete(ok);
                 }, AsyncExecutor.getService())
         );
+        return result;
     }
 
-    public CompletableFuture<Void> saveAsync() {
-        return readyRef.updateAndGet(prev ->
+
+    public CompletableFuture<Boolean> saveAsync() {
+        CompletableFuture<Boolean> result = new CompletableFuture<>();
+
+        readyRef.updateAndGet(prev ->
                 prev.thenRunAsync(() -> {
+                    boolean ok;
                     try {
                         configuration.save(path.toFile());
+                        ok = true;
                     } catch (IOException ex) {
                         LogManager.getLogger().error("Failed to save " + fileName, ex);
+                        ok = false;
                     }
+                    result.complete(ok);
                 }, AsyncExecutor.getService())
         );
+        return result;
     }
 
     public void saveAsync(String key, Object value) {
