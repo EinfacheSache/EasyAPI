@@ -43,7 +43,7 @@ public class FileUtils {
             loadConfigurationFromDisk();
             LogManager.getLogger().info("Loaded file: " + fileName);
         } else {
-            LogManager.getLogger().info("File created (skipped load): " + fileName);
+            LogManager.getLogger().info("File created (skipped loading): " + fileName);
         }
     }
 
