@@ -1,4 +1,4 @@
-name: Publish SNAPSHOT to Sonatype
+name: Publish SNAPSHOT to Maven Central
 
 on:
   push:
