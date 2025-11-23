@@ -2,8 +2,9 @@ name: Publish SNAPSHOT to Maven Central
 
 on:
   push:
-    branches:
-      - main   # oder dein Default-Branch
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   snapshot:

@@ -3,7 +3,6 @@ name: Build
 on:
   push:
     branches: [ main, master ]
-  # PRs bauen wir, aber Release-Upload nur bei Push auf main/master
   pull_request:
     branches: [ main, master ]
 
@@ -11,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # nötig für Release-Erstellung/Upload
+      contents: write
 
     steps:
       - name: Checkout
