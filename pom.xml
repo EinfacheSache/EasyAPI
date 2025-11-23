@@ -6,7 +6,7 @@
 
     <groupId>de.einfachesache</groupId>
     <artifactId>easyapi</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>EasyAPI</name>
@@ -19,11 +19,19 @@
     </properties>
 
     <distributionManagement>
+        <!-- Release-Repo (für Tags / echte Releases) -->
         <repository>
             <id>central</id>
             <name>Maven Central</name>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+
+        <!-- Snapshot-Repo (für jeden Commit) -->
+        <snapshotRepository>
+            <id>central</id>
+            <name>Sonatype Snapshots</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>
