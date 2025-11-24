@@ -7,23 +7,12 @@
 
     <groupId>de.einfachesache</groupId>
     <artifactId>easyapi</artifactId>
-    <version>1.0.0</version> <!-- für SNAPSHOT: z.B. 1.0.1-SNAPSHOT -->
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>EasyAPI</name>
     <url>https://github.com/EinfacheSache/EasyAPI</url>
     <description>A lightweight and easy-to-use API</description>
-
-
-    <!-- Nur für SNAPSHOTs wichtig – Releases laufen über das Central Publishing Plugin -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>central</id>
-            <name>OSSRH Snapshot Repository</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 
     <licenses>
         <license>
@@ -52,7 +41,76 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- Nur für SNAPSHOTs wichtig – Releases laufen über das Central Publishing Plugin -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>central</id>
+            <name>OSSRH Snapshot Repository</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencies>
+
+        <!-- Needed for Stats -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+
+        <!-- Needed for Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.13</version>  <!-- previous version: 1.4.12 -->
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Needed for Console output -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+
+        <!-- Needed for Files -->
+        <dependency>
+            <groupId>org.bspfsystems</groupId>
+            <artifactId>yamlconfiguration</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+        <!-- Needed for WebRequests -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp-jvm</artifactId>
+            <version>5.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250517</version>
+        </dependency>
+
+        <!-- Needed for Building -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.20.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <!-- Java-Compiler -->
             <plugin>
@@ -113,67 +171,7 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
-
-    <dependencies>
-
-        <!-- Needed for Stats -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.13.1</version>
-        </dependency>
-
-        <!-- Needed for Logging -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.5.13</version>  <!-- previous version: 1.4.12 -->
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Needed for Console output -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.13</version>
-        </dependency>
-
-        <!-- Needed for Files -->
-        <dependency>
-            <groupId>org.bspfsystems</groupId>
-            <artifactId>yamlconfiguration</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-
-        <!-- Needed for WebRequests -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp-jvm</artifactId>
-            <version>5.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20250517</version>
-        </dependency>
-
-        <!-- Needed for Building -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.20.0</version> <!-- previous version: 2.15.1 -->
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 
     <profiles>
         <profile>
@@ -203,7 +201,6 @@
                         <version>0.7.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <!-- ID muss zu settings.xml / GitHub Action server-id=central passen -->
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
                         </configuration>
