@@ -7,11 +7,18 @@
     <groupId>de.einfachesache</groupId>
     <artifactId>easyapi</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
 
     <name>EasyAPI</name>
     <url>https://github.com/EinfacheSache/EasyAPI</url>
     <description>A lightweight and easy-to-use API</description>
+
+    <developers>
+        <developer>
+            <name>EinfacheSache</name>
+            <email>klugetommy@web.de</email>
+            <url>https://einfachesache.de</url>
+        </developer>
+    </developers>
 
     <properties>
         <java.version>21</java.version>
@@ -19,18 +26,18 @@
     </properties>
 
     <distributionManagement>
-        <!-- Releases: neuer Central Publishing Endpoint -->
+        <!-- Releases -->
         <repository>
             <id>central</id>
-            <name>Maven Central (Publishing Portal)</name>
-            <url>https://central.sonatype.com/service/local/staging/deploy/maven2/</url>
+            <name>OSSRH Release Repository</name>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
 
-        <!-- SNAPSHOTs bleiben wie gehabt -->
+        <!-- SNAPSHOTs -->
         <snapshotRepository>
             <id>central</id>
-            <name>Central Snapshots</name>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <name>OSSRH Snapshot Repository</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
