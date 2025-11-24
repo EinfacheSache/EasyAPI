@@ -77,7 +77,7 @@ public class FileUtils {
      * Synchronously reloads the file from disk (blocking I/O).
      * Prefer {@link #reloadConfigurationAsync()} for non-blocking usage.
      *
-     * @deprecated since 1.1 – use {@link #reloadConfigurationAsync()}.
+     * @deprecated since 1.0.0 – use {@link #reloadConfigurationAsync()}.
      */
     public void reloadConfiguration() {
         ensureFileExists();
