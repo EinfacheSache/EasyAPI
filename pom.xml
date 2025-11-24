@@ -7,7 +7,7 @@
 
     <groupId>de.einfachesache</groupId>
     <artifactId>easyapi</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>EasyAPI</name>
@@ -122,40 +122,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Sources anhängen (Pflicht für Central) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Javadoc anhängen (Pflicht für Central) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.8.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <source>${java.version}</source>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
-
             <!-- Shading, falls du ein shaded Jar brauchst -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -178,6 +144,26 @@
             <id>release</id>
             <build>
                 <plugins>
+
+                    <!-- Javadoc anhängen (Pflicht für Central) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <source>${java.version}</source>
+                            <failOnError>false</failOnError>
+                        </configuration>
+                    </plugin>
+
                     <!-- GPG-Signaturen (Pflicht für Central) -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -189,6 +175,21 @@
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Sources anhängen (Pflicht für Central) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
