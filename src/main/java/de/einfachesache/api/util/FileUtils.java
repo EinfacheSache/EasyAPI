@@ -79,6 +79,7 @@ public class FileUtils {
      *
      * @deprecated since 1.0.0 – use {@link #reloadConfigurationAsync()}.
      */
+    @Deprecated(since = "1.0.0")
     public void reloadConfiguration() {
         ensureFileExists();
         loadConfigurationFromDisk();
