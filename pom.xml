@@ -2,11 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.einfachesache</groupId>
     <artifactId>easyapi</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0</version> <!-- für SNAPSHOT: z.B. 1.0.1-SNAPSHOT -->
     <packaging>jar</packaging>
 
     <name>EasyAPI</name>
@@ -40,8 +41,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- Nur für SNAPSHOTs wichtig – Releases laufen über das Central Publishing Plugin -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>central</id>
+            <name>OSSRH Snapshot Repository</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
+            <!-- Java-Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -51,6 +62,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Sources anhängen (Pflicht für Central) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -65,20 +77,7 @@
                 </executions>
             </plugin>
 
-            <!-- Shading -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.2</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- Javadoc anhängen (Pflicht für Central) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -93,24 +92,39 @@
                 </executions>
                 <configuration>
                     <source>${java.version}</source>
-                    <!-- verhindert, dass Javadoc-Warnings den Build killen -->
                     <failOnError>false</failOnError>
                 </configuration>
             </plugin>
+
+            <!-- Shading, falls du ein shaded Jar brauchst -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Neues Central Publishing Plugin für "normale" Releases -->
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
                 <version>0.7.0</version>
-
-                <!-- wichtig, damit es den deploy-Vorgang "übernimmt" -->
                 <extensions>true</extensions>
-
                 <configuration>
-                    <!-- muss zu deinem <server> in settings.xml passen -->
+                    <!-- ID muss zu settings.xml / GitHub Action server-id=central passen -->
                     <publishingServerId>central</publishingServerId>
                     <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
+
+            <!-- GPG-Signaturen (Pflicht für Central) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -126,6 +140,7 @@
                 </executions>
             </plugin>
         </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -151,7 +166,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Needed for Console output) -->
+        <!-- Needed for Console output -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
