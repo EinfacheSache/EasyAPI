@@ -19,14 +19,14 @@
     </properties>
 
     <distributionManagement>
-        <!-- Releases (brauchst du später für echte 1.0.0 Releases) -->
+        <!-- Releases: neuer Central Publishing Endpoint -->
         <repository>
             <id>central</id>
-            <name>Maven Central (OSSRH Staging API)</name>
-            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
+            <name>Maven Central (Publishing Portal)</name>
+            <url>https://central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
 
-        <!-- SNAPSHOTs (für deine Commits) -->
+        <!-- SNAPSHOTs bleiben wie gehabt -->
         <snapshotRepository>
             <id>central</id>
             <name>Central Snapshots</name>
